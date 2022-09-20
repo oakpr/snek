@@ -18,7 +18,7 @@ jobs:
           npm ci
       - name: Snowpack build
         run: |
-          snowpack build
+          npm run build
       - name: Push git subdirectory as branch
         uses: s0/git-publish-subdir-action@v2.5.1
         env:
