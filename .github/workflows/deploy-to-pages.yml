@@ -1,0 +1,27 @@
+name: Deploy to Github Pages
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version: 16
+      - name: NPM Install
+        run: |
+          npm ci
+      - name: Snowpack build
+        run: |
+          snowpack build
+      - name: Push git subdirectory as branch
+        uses: s0/git-publish-subdir-action@v2.5.1
+        env:
+          REPO: self
+          BRANCH: gh-pages
+          FOLDER: build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
