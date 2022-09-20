@@ -8,6 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Setup NodeJS
         uses: actions/setup-node@v3.4.1
         with:
