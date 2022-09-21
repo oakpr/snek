@@ -50,6 +50,7 @@ export class Player {
 				}
 			}
 
+			// If disconnected, die
 			if (!controller) {
 				this.disconnected = true;
 				return;
@@ -58,6 +59,12 @@ export class Player {
 			// Write inputs
 			this.movement = [controller.axes[0], controller.axes[1]];
 			this.buttons = [controller.buttons[1].pressed, controller.buttons[0].pressed];
+
+			// Write d-pad inputs
+			this.movement[0] -= controller.buttons[14] ? 1 : 0;
+			this.movement[0] += controller.buttons[15] ? 1 : 0;
+			this.movement[1] -= controller.buttons[12] ? 1 : 0;
+			this.movement[1] += controller.buttons[13] ? 1 : 0;
 
 			// If 'select' or the equivalent button is pressed, die
 			if (this.buttons[8]) {
@@ -75,6 +82,11 @@ export class Player {
 				this.disconnected = true;
 			}
 		}
+
+		// Normalize movement to len == 1
+		const length = Math.sqrt((this.movement[0] ** 2) + (this.movement[1] ** 2));
+		this.movement[0] /= length;
+		this.movement[1] /= length;
 	}
 }
 
