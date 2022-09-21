@@ -23,12 +23,12 @@ canvas {
 /* The screen is narrow, so our width should be 100% */
 @media screen and (orientation: portrait) {
 	canvas {
-		width: 100vw;
+		width: 100%;
 	}
 }
 
 @media screen and (orientation: landscape) {
 	canvas {
-		height: 100vh;
+		height: 100%;
 	}
 }

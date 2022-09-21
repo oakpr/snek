@@ -94,7 +94,7 @@ export function tickPlayerInput() {
 	// Look for new controllers
 	// eslint-disable-next-line unicorn/prefer-set-has
 	const existingPlayers: number[] = players.filter(Boolean).map(v => v.controllerId);
-	const newControllers = navigator.getGamepads().filter(v => !existingPlayers.includes(v.index)).filter(v => v.buttons.some(Boolean)).map(v => new Player(v));
+	const newControllers = navigator.getGamepads().filter(Boolean).filter(v => !existingPlayers.includes(v.index)).filter(v => v.buttons.some(Boolean)).map(v => new Player(v));
 	if (!existingPlayers.includes(-1)) {
 		let keyboardActive: boolean;
 		for (const key of ['z', 'x', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright']) {
