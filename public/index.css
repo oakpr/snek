@@ -21,13 +21,13 @@ canvas {
 }
 
 /* The screen is narrow, so our width should be 100% */
-@media only screen and (max-aspect-ratio: 0.75) {
+@media only screen and (max-aspect-ratio: 0.5) {
 	canvas {
 		width: 100%;
 	}
 }
 
-@media not screen and (max-aspect-ratio: 0.75) {
+@media not screen and (max-aspect-ratio: 0.5) {
 	canvas {
 		height: 100%;
 	}
