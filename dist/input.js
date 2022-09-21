@@ -41,6 +41,10 @@ export class Player {
       }
       this.movement = [controller.axes[0], controller.axes[1]];
       this.buttons = [controller.buttons[1].pressed, controller.buttons[0].pressed];
+      this.movement[0] -= controller.buttons[14] ? 1 : 0;
+      this.movement[0] += controller.buttons[15] ? 1 : 0;
+      this.movement[1] -= controller.buttons[12] ? 1 : 0;
+      this.movement[1] += controller.buttons[13] ? 1 : 0;
       if (this.buttons[8]) {
         this.disconnected = true;
       }
@@ -55,11 +59,14 @@ export class Player {
         this.disconnected = true;
       }
     }
+    const length = Math.sqrt(this.movement[0] ** 2 + this.movement[1] ** 2);
+    this.movement[0] /= length;
+    this.movement[1] /= length;
   }
 }
 export function tickPlayerInput() {
   const existingPlayers = players.filter(Boolean).map((v) => v.controllerId);
-  const newControllers = navigator.getGamepads().filter((v) => !existingPlayers.includes(v.index)).filter((v) => v.buttons.some(Boolean)).map((v) => new Player(v));
+  const newControllers = navigator.getGamepads().filter(Boolean).filter((v) => !existingPlayers.includes(v.index)).filter((v) => v.buttons.some(Boolean)).map((v) => new Player(v));
   if (!existingPlayers.includes(-1)) {
     let keyboardActive;
     for (const key of ["z", "x", "arrowup", "arrowdown", "arrowleft", "arrowright"]) {
