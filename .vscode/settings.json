@@ -1,0 +1,7 @@
+{
+	"editor.formatOnSave": true,
+	"[typescript]": {
+		"editor.defaultFormatter": "samverschueren.linter-xo"
+	},
+	"xo.format.enable": true
+}
