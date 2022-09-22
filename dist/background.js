@@ -58,7 +58,7 @@ function initShader() {
     return false;
   }
   const canvas = new OffscreenCanvas(480, 480);
-  const gl = canvas.getContext("webgl2");
+  const gl = canvas.getContext("webgl");
   if (!gl) {
     return false;
   }
