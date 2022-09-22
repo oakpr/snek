@@ -92,13 +92,13 @@ type WebGlBuffers = {
 	position: WebGLBuffer;
 };
 
-function initShader(): [OffscreenCanvas, WebGL2RenderingContext, ProgramInfo, WebGlBuffers] | false {
+function initShader(): [OffscreenCanvas, WebGLRenderingContext, ProgramInfo, WebGlBuffers] | false {
 	if (typeof OffscreenCanvas === 'undefined') {
 		return false;
 	}
 
 	const canvas = new OffscreenCanvas(480, 480);
-	const gl = canvas.getContext('webgl2');
+	const gl = canvas.getContext('webgl');
 	if (!gl) {
 		return false;
 	}
@@ -147,7 +147,7 @@ function initShader(): [OffscreenCanvas, WebGL2RenderingContext, ProgramInfo, We
 	return [canvas, gl, programInfo, {position: buffer}];
 }
 
-function renderShader(gl: WebGL2RenderingContext, programInfo: ProgramInfo, buffers: WebGlBuffers, timer: number) {
+function renderShader(gl: WebGLRenderingContext, programInfo: ProgramInfo, buffers: WebGlBuffers, timer: number) {
 	// Update the shader timer
 	const timeLocation = gl.getUniformLocation(programInfo.program, 'timer');
 	gl.uniform1f(timeLocation, Math.sin(timer / 30) * 30);
@@ -236,7 +236,7 @@ function renderShader(gl: WebGL2RenderingContext, programInfo: ProgramInfo, buff
 	}
 }
 
-function loadShader(gl: WebGL2RenderingContext, type: number, source: string) {
+function loadShader(gl: WebGLRenderingContext, type: number, source: string) {
 	const shader = gl.createShader(type);
 	// Send the source to the shader object
 	gl.shaderSource(shader, source);
