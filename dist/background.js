@@ -32,7 +32,7 @@ if (bgres) {
 }
 export function background(game_state, ctx) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !bgres || !game_state.settings.enableBg) {
-    ctx.fillStyle = "gray";
+    ctx.fillStyle = "rgb(32, 32, 32)";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     if (!bgres) {
       ctx.strokeStyle = "white";
