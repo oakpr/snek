@@ -1,4 +1,5 @@
 import {background} from './background.js';
+import grid from './grid.js';
 import hud from './hud.js';
 import type {Player} from './input.js';
 import * as input from './input.js';
@@ -41,8 +42,8 @@ function tick() {
 	// Draw background
 	background(gameState, ctx);
 
-	// Draw HUD
-	hud(gameState, delta, ctx);
+	// Draw grid
+	grid(ctx, gameState);
 
 	if (gameState.gameStarted) {
 		// Do normal game things
@@ -50,6 +51,9 @@ function tick() {
 		// Draw the pre-game menu
 		menu(ctx, gameState);
 	}
+
+	// Draw HUD
+	hud(gameState, delta, ctx);
 
 	// Wait for a frame, then call me again.
 	window.requestAnimationFrame(tick);
