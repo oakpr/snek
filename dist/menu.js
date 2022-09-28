@@ -1,7 +1,9 @@
 const options = [
   ["snek menu"],
-  ["enable bg?", "enable_bg", [true, false]],
+  ["enable bg?", "enableBg", [true, false]],
   ["wrap?", "wrap", [true, false]],
+  ["width?", "gridWidth", [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
+  ["height?", "gridHeight", [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
   ["press a to start"]
 ];
 let cursorPos = 1;
@@ -24,7 +26,7 @@ export default function menu(ctx, gameState) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     if (options[index][2]?.length > 0) {
-      ctx.fillText(`${i === 0 ? "< " : ""}${options[index][0]}: ${gameState.settings.has(options[index][1]) ? gameState.settings.get(options[index][1]) : options[index][2][0]}${i === 0 ? " >" : ""}`, x, y, width);
+      ctx.fillText(`${i === 0 ? "< " : ""}${options[index][0]}: ${Object.hasOwn(gameState.settings, options[index][1]) ? gameState.settings[options[index][1]] : options[index][2][0]}${i === 0 ? " >" : ""}`, x, y, width);
     } else {
       ctx.fillText(options[index][0], x, y, width);
     }
@@ -47,7 +49,7 @@ export default function menu(ctx, gameState) {
   }
   if (Math.abs(gameState.players[0]?.movement[0]) > 0.9) {
     if (values && values.length > 0 && !suppressX) {
-      let currentSetting = values.includes(gameState.settings.get(key)) ? values.indexOf(gameState.settings.get(key)) : 0;
+      let currentSetting = values.includes(gameState.settings[key]) ? values.indexOf(gameState.settings[key]) : 0;
       const delta = Math.round(gameState.players[0].movement[0]);
       currentSetting += delta;
       currentSetting %= values.length;
@@ -55,7 +57,7 @@ export default function menu(ctx, gameState) {
         currentSetting += values.length;
       }
       suppressX = true;
-      gameState.settings.set(key, values[currentSetting]);
+      gameState.settings[key] = values[currentSetting];
     }
   } else {
     suppressX = false;

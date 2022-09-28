@@ -7,10 +7,12 @@ const gameState = {
   players: [],
   clock: 0,
   score: 0,
-  settings: new Map([
-    ["enable_bg", true],
-    ["wrap", false]
-  ]),
+  settings: {
+    enableBg: true,
+    wrap: false,
+    gridWidth: 10,
+    gridHeight: 10
+  },
   gameStarted: false
 };
 const canvas = document.querySelector("#viewport");
