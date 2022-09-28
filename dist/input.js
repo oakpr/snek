@@ -23,7 +23,7 @@ export class Player {
       this.disconnected = false;
     }
     this.buttonsDirty = [false, false];
-    this.movementDirty = false;
+    this.movementDirty = [false, false];
     this.oldButtons = this.buttons;
     this.oldMovement = this.movement;
   }
@@ -68,9 +68,9 @@ export class Player {
       this.movement[0] /= length;
       this.movement[1] /= length;
     }
-    this.movementDirty = false;
+    this.movementDirty = [false, false];
     for (let i = 0; i < this.oldMovement.length; i++) {
-      this.movementDirty = this.movementDirty || this.oldMovement[i] !== this.movement[i];
+      this.movementDirty[i] = sign(Math.round(this.oldMovement[i] * 0.6)) !== sign(Math.round(this.movement[i] * 0.6));
     }
     this.oldMovement = this.movement;
     for (let i = 0; i < this.oldButtons.length; i++) {
@@ -114,4 +114,7 @@ export function tickPlayerInput() {
       continue;
     }
   }
+}
+function sign(n) {
+  return n ? n < 0 ? -1 : 1 : 0;
 }
