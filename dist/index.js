@@ -1,4 +1,5 @@
 import {background} from "./background.js";
+import grid from "./grid.js";
 import hud from "./hud.js";
 import * as input from "./input.js";
 import menu from "./menu.js";
@@ -24,11 +25,12 @@ function tick() {
   lastTick = Date.now();
   gameState.clock += delta;
   background(gameState, ctx);
-  hud(gameState, delta, ctx);
+  grid(ctx, gameState);
   if (gameState.gameStarted) {
   } else {
     menu(ctx, gameState);
   }
+  hud(gameState, delta, ctx);
   window.requestAnimationFrame(tick);
 }
 tick();
