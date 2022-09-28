@@ -9,6 +9,9 @@ const options: Array<[string, string, any[]] | [string]> = [
 ];
 let cursorPos = 1;
 
+let suppressY = false;
+let suppressX = false;
+
 export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState) {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 	ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 128);
@@ -36,9 +39,8 @@ export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState
 	const key = options[cursorPos][1];
 	const values = options[cursorPos][2] || false;
 
-	if (gameState.players[0]?.movementDirty) {
-		// Change the cursor if the player is inputting up or down
-		if (Math.abs(gameState.players[0].movement[1]) > 0.7) {
+	if (Math.abs(gameState.players[0]?.movement[1]) > 0.7) {
+		if (!suppressY) {
 			const delta = Math.round(gameState.players[0].movement[1]);
 			cursorPos += delta;
 			cursorPos %= options.length;
@@ -46,11 +48,16 @@ export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState
 				cursorPos += options.length;
 			}
 
+			suppressY = true;
+
 			return;
 		}
+	} else {
+		suppressY = false;
+	}
 
-		// Change the value if the player is inputting left or right
-		if (values && values.length > 0 && Math.abs(gameState.players[0].movement[0]) > 0.7) {
+	if (Math.abs(gameState.players[0]?.movement[0]) > 0.9) {
+		if (values && values.length > 0 && !suppressX) {
 			let currentSetting = values.includes(gameState.settings.get(key)) ? values.indexOf(gameState.settings.get(key)) : 0;
 			const delta = Math.round(gameState.players[0].movement[0]);
 			currentSetting += delta;
@@ -59,9 +66,13 @@ export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState
 				currentSetting += values.length;
 			}
 
+			suppressX = true;
+
 			// Set the field to the new value
 			gameState.settings.set(key, values[currentSetting]);
 		}
+	} else {
+		suppressX = false;
 	}
 
 	// If the player's button is pressed, advance to the game

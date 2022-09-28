@@ -14,7 +14,7 @@ export class Player {
 	controllerId: number;
 	oldMovement: [number, number];
 	movement: [number, number];
-	movementDirty: boolean;
+	movementDirty: [boolean, boolean];
 	oldButtons: boolean[];
 	buttons: boolean[];
 	buttonsDirty: boolean[];
@@ -38,7 +38,7 @@ export class Player {
 		}
 
 		this.buttonsDirty = [false, false];
-		this.movementDirty = false;
+		this.movementDirty = [false, false];
 		this.oldButtons = this.buttons;
 		this.oldMovement = this.movement;
 	}
@@ -101,9 +101,9 @@ export class Player {
 		}
 
 		// Detect if movement has changed
-		this.movementDirty = false;
+		this.movementDirty = [false, false];
 		for (let i = 0; i < this.oldMovement.length; i++) {
-			this.movementDirty = this.movementDirty || this.oldMovement[i] !== this.movement[i];
+			this.movementDirty[i] = sign(Math.round(this.oldMovement[i] * 0.6)) !== sign(Math.round(this.movement[i] * 0.6));
 		}
 
 		this.oldMovement = this.movement;
@@ -160,4 +160,8 @@ export function tickPlayerInput() {
 			continue;
 		}
 	}
+}
+
+function sign(n: number) {
+	return n ? (n < 0 ? -1 : 1) : 0;
 }
