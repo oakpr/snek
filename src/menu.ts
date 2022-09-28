@@ -17,14 +17,16 @@ let suppressX = false;
 export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState) {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 	ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 128);
-	for (let i = -2; i < 3; i++) {
+	const entryRange = 3;
+	const entrySpacing = 48;
+	for (let i = -entryRange; i < entryRange + 1; i++) {
 		const index = cursorPos + i;
 		if (index < 0 || index >= options.length) {
 			continue;
 		}
 
 		const x = ctx.canvas.width / 2;
-		const y = (ctx.canvas.height / 2) + (64 * i);
+		const y = (ctx.canvas.height / 2) + (entrySpacing * i);
 		const width = ctx.canvas.width - 128;
 		ctx.strokeStyle = 'white';
 		ctx.fillStyle = 'white';
