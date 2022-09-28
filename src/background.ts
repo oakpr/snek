@@ -36,7 +36,7 @@ if (bgres) {
 }
 
 export function background(game_state: GameState, ctx: CanvasRenderingContext2D) {
-	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !bgres || !game_state.settings.get('enable_bg')) {
+	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !bgres || !game_state.settings.enableBg) {
 		ctx.fillStyle = 'gray';
 		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 		if (!bgres) {

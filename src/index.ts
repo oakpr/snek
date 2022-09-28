@@ -8,7 +8,7 @@ export type GameState = {
 	clock: number;
 	score: number;
 	players: Array<Player | undefined>;
-	settings: Map<string, any>;
+	settings: Record<string, any>;
 	gameStarted: boolean;
 };
 
@@ -17,10 +17,12 @@ const gameState: GameState = {
 	players: [],
 	clock: 0,
 	score: 0,
-	settings: new Map([
-		['enable_bg', true],
-		['wrap', false],
-	]),
+	settings: {
+		enableBg: true,
+		wrap: false,
+		gridWidth: 10,
+		gridHeight: 10,
+	},
 	gameStarted: false,
 };
 const canvas: HTMLCanvasElement = document.querySelector('#viewport');
