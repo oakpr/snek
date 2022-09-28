@@ -31,7 +31,7 @@ if (bgres) {
   [bgcanvas, bgctx, bgpi, bgbuf] = bgres;
 }
 export function background(game_state, ctx) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !bgres) {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !bgres || !game_state.settings.get("enable_bg")) {
     ctx.fillStyle = "gray";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     if (!bgres) {

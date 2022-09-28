@@ -22,6 +22,10 @@ export class Player {
       this.associatedEntity = 0;
       this.disconnected = false;
     }
+    this.buttonsDirty = [false, false];
+    this.movementDirty = false;
+    this.oldButtons = this.buttons;
+    this.oldMovement = this.movement;
   }
   tick() {
     if (this.controllerId >= 0) {
@@ -60,8 +64,19 @@ export class Player {
       }
     }
     const length = Math.sqrt(this.movement[0] ** 2 + this.movement[1] ** 2);
-    this.movement[0] /= length;
-    this.movement[1] /= length;
+    if (length > 0) {
+      this.movement[0] /= length;
+      this.movement[1] /= length;
+    }
+    this.movementDirty = false;
+    for (let i = 0; i < this.oldMovement.length; i++) {
+      this.movementDirty = this.movementDirty || this.oldMovement[i] !== this.movement[i];
+    }
+    this.oldMovement = this.movement;
+    for (let i = 0; i < this.oldButtons.length; i++) {
+      this.buttonsDirty[i] = this.oldButtons[i] !== this.buttons[i];
+    }
+    this.oldButtons = this.buttons;
   }
 }
 export function tickPlayerInput() {
