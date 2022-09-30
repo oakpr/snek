@@ -1,6 +1,8 @@
 import {mat4} from 'gl-matrix';
 import type {GameState} from 'src';
 
+// Mostly copied from https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API
+
 const vsSource = `
 	attribute vec4 aVertexPosition;
 
@@ -39,7 +41,7 @@ export function background(game_state: GameState, ctx: CanvasRenderingContext2D)
 	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !bgres || !game_state.settings.enableBg) {
 		ctx.fillStyle = 'rgb(32, 32, 32)';
 		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		if (!bgres) {
+		if (!bgres && game_state.settings.enableBg) {
 			ctx.strokeStyle = 'white';
 			ctx.textAlign = 'center';
 			ctx.strokeText('webgl broken?', ctx.canvas.width / 2, ctx.canvas.height / 2);
