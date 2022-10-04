@@ -7,12 +7,13 @@ export default function hud(game_state: GameState, _delta: number, ctx: CanvasRe
 	ctx.fillRect(0, ctx.canvas.height - 34, ctx.canvas.width, 64);
 	// Draw title
 	ctx.strokeStyle = 'white';
+	ctx.fillStyle = 'white';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
 	ctx.font = '32px Major Mono Display';
-	ctx.strokeText('snek', ctx.canvas.width / 2, 15);
+	ctx.fillText('snek', ctx.canvas.width / 2, 15);
 	ctx.textAlign = 'left';
 	ctx.textBaseline = 'bottom';
 	ctx.font = '16px Major Mono Display';
-	ctx.strokeText(`score ${game_state.score}`, 10, ctx.canvas.height - 10);
+	ctx.fillText(`score ${game_state.score}`, 10, ctx.canvas.height - 10);
 }
