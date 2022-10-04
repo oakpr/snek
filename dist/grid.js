@@ -1,6 +1,6 @@
 export default function grid(ctx, gameState) {
-  const widthCells = gameState.settings["gridWidth"];
-  const heightCells = gameState.settings["gridHeight"];
+  const widthCells = gameState.settings.gridWidth;
+  const heightCells = gameState.settings.gridHeight;
   const cellSize = cellSizeHelper(ctx, gameState);
   const gridW = widthCells * cellSize;
   const gridH = heightCells * cellSize;
@@ -32,16 +32,16 @@ export default function grid(ctx, gameState) {
   ctx.stroke();
 }
 export function cellSizeHelper(ctx, gameState) {
-  const widthCells = gameState.settings["gridWidth"];
-  const heightCells = gameState.settings["gridHeight"];
+  const widthCells = gameState.settings.gridWidth;
+  const heightCells = gameState.settings.gridHeight;
   const fieldW = ctx.canvas.width - 32;
   const fieldH = ctx.canvas.height - 96;
   const cellSize = Math.min(fieldW / widthCells, fieldH / heightCells);
   return cellSize;
 }
 export function cellPositionHelper(ctx, gameState, position, cellSizeInput) {
-  const widthCells = gameState.settings["gridWidth"];
-  const heightCells = gameState.settings["gridHeight"];
+  const widthCells = gameState.settings.gridWidth;
+  const heightCells = gameState.settings.gridHeight;
   const cellSize = cellSizeInput || cellSizeHelper(ctx, gameState);
   const gridW = widthCells * cellSize;
   const gridH = heightCells * cellSize;
@@ -50,7 +50,7 @@ export function cellPositionHelper(ctx, gameState, position, cellSizeInput) {
   const left = centerX - gridW / 2;
   const top = centerY - gridH / 2;
   return [
-    left + (cellSize * position[0] + 0.5),
+    left + cellSize * (position[0] + 0.5),
     top + cellSize * (position[1] + 0.5)
   ];
 }
