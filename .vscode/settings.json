@@ -5,5 +5,5 @@
 	},
 	"xo.format.enable": true,
 	"editor.insertSpaces": false,
-	"git.enableCommitSigning": true
+	"git.enableCommitSigning": false
 }
