@@ -3,5 +3,7 @@
 	"[typescript]": {
 		"editor.defaultFormatter": "samverschueren.linter-xo"
 	},
-	"xo.format.enable": true
+	"xo.format.enable": true,
+	"editor.insertSpaces": false,
+	"git.enableCommitSigning": true
 }
