@@ -1,3 +1,4 @@
+import {Snake} from "./snake.js";
 export const maxPlayers = 2;
 export const players = [];
 const keysPressedMap = {};
@@ -13,13 +14,13 @@ export class Player {
       this.controllerId = controller.index;
       this.movement = [controller.axes[0], controller.axes[1]];
       this.buttons = [controller.buttons[1].pressed, controller.buttons[0].pressed];
-      this.associatedEntity = 0;
+      this.snake = new Snake();
       this.disconnected = false;
     } else {
       this.controllerId = -1;
       this.movement = [0, 0];
       this.buttons = [keysPressedMap.z, keysPressedMap.x];
-      this.associatedEntity = 0;
+      this.snake = new Snake();
       this.disconnected = false;
     }
     this.buttonsDirty = [false, false];

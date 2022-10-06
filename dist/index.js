@@ -3,6 +3,7 @@ import grid from "./grid.js";
 import hud from "./hud.js";
 import * as input from "./input.js";
 import menu from "./menu.js";
+import snake from "./snake.js";
 let lastTick = Date.now();
 const gameState = {
   players: [],
@@ -30,6 +31,7 @@ function tick() {
   } else {
     menu(ctx, gameState);
   }
+  snake(ctx, gameState, delta);
   hud(gameState, delta, ctx);
   window.requestAnimationFrame(tick);
 }
