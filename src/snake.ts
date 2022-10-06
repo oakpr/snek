@@ -35,7 +35,7 @@ export class Snake {
 		return 1 / this.tail.length;
 	}
 
-	// Tick the snake. If its timer exceeds speed(), reset it to zero and move().
+	// Tick the snake. Increase the timer by delta. If its timer exceeds speed(), reset it to zero and move().
 	// Also, initialize the snake at a random position facing the center, if it looks uninitialized.
 	tick(gameState: GameState, ctx: CanvasRenderingContext2D, delta: number) {
 		// TODO
