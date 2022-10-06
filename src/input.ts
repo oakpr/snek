@@ -1,3 +1,5 @@
+import {Snake} from './snake.js';
+
 export const maxPlayers = 2;
 
 export const players: Array<Player | undefined> = [];
@@ -18,7 +20,7 @@ export class Player {
 	oldButtons: boolean[];
 	buttons: boolean[];
 	buttonsDirty: boolean[];
-	associatedEntity: number;
+	snake: Snake;
 	disconnected: boolean;
 
 	constructor(controller: Gamepad | undefined) {
@@ -27,13 +29,13 @@ export class Player {
 			// https://w3c.github.io/gamepad/#remapping
 			this.movement = [controller.axes[0], controller.axes[1]];
 			this.buttons = [controller.buttons[1].pressed, controller.buttons[0].pressed];
-			this.associatedEntity = 0; // When the player is implemented, add this
+			this.snake = new Snake(); // When the player is implemented, add this
 			this.disconnected = false;
 		} else {
 			this.controllerId = -1;
 			this.movement = [0, 0];
 			this.buttons = [keysPressedMap.z, keysPressedMap.x];
-			this.associatedEntity = 0;
+			this.snake = new Snake();
 			this.disconnected = false;
 		}
 

@@ -5,6 +5,8 @@ import type {Player} from './input.js';
 import * as input from './input.js';
 import type {Settings} from './menu.js';
 import menu from './menu.js';
+import type {Snake} from './snake.js';
+import snake from './snake.js';
 
 export type GameState = {
 	clock: number;
@@ -52,6 +54,9 @@ function tick() {
 		// Draw the pre-game menu
 		menu(ctx, gameState);
 	}
+
+	// Tick snakes
+	snake(ctx, gameState, delta);
 
 	// Draw HUD
 	hud(gameState, delta, ctx);
