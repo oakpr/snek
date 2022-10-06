@@ -3,13 +3,14 @@ import grid from './grid.js';
 import hud from './hud.js';
 import type {Player} from './input.js';
 import * as input from './input.js';
+import type {Settings} from './menu.js';
 import menu from './menu.js';
 
 export type GameState = {
 	clock: number;
 	score: number;
 	players: Array<Player | undefined>;
-	settings: Record<string, any>;
+	settings: Settings;
 	gameStarted: boolean;
 };
 

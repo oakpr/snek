@@ -1,5 +1,12 @@
 import type {GameState} from 'src';
 
+export type Settings = {
+	enableBg: boolean;
+	wrap: boolean;
+	gridWidth: number;
+	gridHeight: number;
+};
+
 const options: Array<[string, string, any[]] | [string]> = [
 	['snek menu'],
 	['enable bg?', 'enableBg', [true, false]],
@@ -7,7 +14,6 @@ const options: Array<[string, string, any[]] | [string]> = [
 	['width?', 'gridWidth', [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
 	['height?', 'gridHeight', [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
 	['press a to start'],
-
 ];
 let cursorPos = 1;
 
