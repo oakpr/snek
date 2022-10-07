@@ -24,6 +24,7 @@ export class Snake {
 	tail: Array<[number, number]>;
 	len: number;
 	score: number;
+	lastFacing: Facing;
 	facing: Facing;
 	dying: boolean;
 	timer: number;
@@ -68,6 +69,8 @@ export class Snake {
 				this.facing = Facing.Down;
 			}
 
+			this.lastFacing = this.facing;
+
 			this.tail.push([x, y]);
 		}
 
@@ -92,7 +95,7 @@ export class Snake {
 		}
 
 		let badDirection: Facing;
-		switch (this.facing) {
+		switch (this.lastFacing) {
 			case Facing.Up: {
 				badDirection = Facing.Down;
 				break;
@@ -190,6 +193,7 @@ export class Snake {
 	// If wrapping is enabled and the snake is past the edge, wrap.
 	// If this snake's head intersects with another snake, kill it.
 	move(gameState: GameState) {
+		this.lastFacing = this.facing;
 		let head = this.tail[0];
 		switch (this.facing) {
 			case Facing.Up: {
