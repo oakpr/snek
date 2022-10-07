@@ -1,5 +1,5 @@
 import type {GameState} from 'src';
-import { cellSizeHelper, cellPositionHelper } from './grid';
+import {cellSizeHelper, cellPositionHelper} from './grid.js';
 
 export default function snake(ctx: CanvasRenderingContext2D, gameState: GameState, delta: number) {
 	// Iterate over all players and run their snake ticks
@@ -7,7 +7,8 @@ export default function snake(ctx: CanvasRenderingContext2D, gameState: GameStat
 		if (player === undefined) {
 			continue;
 		}
-		player.snake.tick(gameState, ctx, delta)
+
+		player.snake.tick(gameState, ctx, delta);
 	}
 }
 
@@ -48,74 +49,79 @@ export class Snake {
 	// Also, initialize the snake at a random position facing the center, if it looks uninitialized.
 	tick(gameState: GameState, ctx: CanvasRenderingContext2D, delta: number) {
 		if (!gameState.gameStarted) {
-			return
+			return;
 		}
+
 		const player = gameState.players.find(v => v.controllerId === this.player);
 		const x: number = player.movement[0];
 		const y: number = player.movement[1];
-		let f = this.facing
-		if (x > 0){
-			f = Facing.Right
+		let f = this.facing;
+		if (x > 0) {
+			f = Facing.Right;
 		}
-		if (x<0){
-			f = Facing.Left
+
+		if (x < 0) {
+			f = Facing.Left;
 		}
-		if (y<0){
-			f = Facing.Up
+
+		if (y < 0) {
+			f = Facing.Up;
 		}
-		if (y>0){
-			f = Facing.Down
+
+		if (y > 0) {
+			f = Facing.Down;
 		}
 
 		let badDirection: Facing;
 		switch (this.facing) {
 			case Facing.Up: {
-				badDirection = Facing.Down
-				break
+				badDirection = Facing.Down;
+				break;
 			}
+
 			case Facing.Down: {
-				badDirection = Facing.Up
-				break
+				badDirection = Facing.Up;
+				break;
 			}
+
 			case Facing.Left: {
-				badDirection = Facing.Right
-				break
+				badDirection = Facing.Right;
+				break;
 			}
+
 			case Facing.Right: {
-				badDirection = Facing.Left
-				break
+				badDirection = Facing.Left;
+				break;
 			}
+
 			default: {
-				badDirection = Facing.Uninit
+				badDirection = Facing.Uninit;
 			}
 		}
-		
+
 		if (f !== badDirection) {
 			this.facing = f;
 		}
-		if (this.facing === Facing.Uninit) {
-			let x = Math.floor(Math.random() * gameState.settings.gridWidth);
-			let y = Math.floor(Math.random() * gameState.settings.gridHeight);
-			let cx = gameState.settings.gridWidth / 2;
-			let cy = gameState.settings.gridHeight / 2;
-			if (Math.abs(cx - x) > Math.abs(cy - y)) {
-				if (x > cx) {
-					this.facing = Facing.Left
-				} else {this.facing = Facing.Right}
-			} else {
-				if (y > cy) {
-					this.facing = Facing.Up
-				} else {this.facing = Facing.Down}
 
-				
+		if (this.facing === Facing.Uninit) {
+			const x = Math.floor(Math.random() * gameState.settings.gridWidth);
+			const y = Math.floor(Math.random() * gameState.settings.gridHeight);
+			const cx = gameState.settings.gridWidth / 2;
+			const cy = gameState.settings.gridHeight / 2;
+			if (Math.abs(cx - x) > Math.abs(cy - y)) {
+				this.facing = x > cx ? Facing.Left : Facing.Right;
+			} else if (y > cy) {
+				this.facing = Facing.Up;
+			} else {
+				this.facing = Facing.Down;
 			}
 
-			this.tail.push([x, y])
+			this.tail.push([x, y]);
 		}
-		
-		this.timer += delta
+
+		this.timer += delta;
 		if (this.timer > this.speed()) {
-			this.move(gameState)
+			this.move(gameState);
 			this.timer = 0;
 		}
 
@@ -125,14 +131,15 @@ export class Snake {
 		ctx.lineJoin = 'round';
 		ctx.lineCap = 'round';
 		ctx.beginPath();
-		let headPos = cellPositionHelper(ctx, gameState, this.tail[0], ctx.lineWidth)
+		const headPos = cellPositionHelper(ctx, gameState, this.tail[0], ctx.lineWidth);
 		ctx.moveTo(headPos[0], headPos[1]);
 		ctx.lineTo(headPos[0], headPos[1]);
-		for (const position of this.tail){
-			let pos = cellPositionHelper(ctx, gameState, position, ctx.lineWidth)
+		for (const position of this.tail) {
+			const pos = cellPositionHelper(ctx, gameState, position, ctx.lineWidth);
 			ctx.lineTo(pos[0], pos[1]);
 		}
-		ctx.stroke()
+
+		ctx.stroke();
 	}
 
 	// Move the snake one tile, in the direction it's facing.
@@ -140,34 +147,38 @@ export class Snake {
 	// If wrapping is enabled and the snake is past the edge, wrap.
 	// If this snake's head intersects with another snake, kill it.
 	move(gameState: GameState) {
-
 		let head = this.tail[0];
 		switch (this.facing) {
 			case Facing.Up: {
 				head = addPos(head, [0, -1]);
 				break;
 			}
+
 			case Facing.Down: {
 				head = addPos(head, [0, 1]);
 				break;
 			}
+
 			case Facing.Right: {
 				head = addPos(head, [1, 0]);
 				break;
 			}
+
 			case Facing.Left: {
 				head = addPos(head, [-1, 0]);
 				break;
 			}
+
 			default: {
 				break;
 			}
 		}
-		this.tail.unshift(head)
-		this.tail.pop()
+
+		this.tail.unshift(head);
+		this.tail.pop();
 	}
 }
 
 function addPos(a: [number, number], b: [number, number]): [number, number] {
-	return [a[0] + b[0], a[1] + b[1]]
+	return [a[0] + b[0], a[1] + b[1]];
 }

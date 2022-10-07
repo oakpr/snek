@@ -1,8 +1,8 @@
 import type {GameState} from 'src';
 
 export default function grid(ctx: CanvasRenderingContext2D, gameState: GameState) {
-	const widthCells = gameState.settings.gridWidth as number;
-	const heightCells = gameState.settings.gridHeight as number;
+	const widthCells = gameState.settings.gridWidth;
+	const heightCells = gameState.settings.gridHeight;
 	const cellSize = cellSizeHelper(ctx, gameState);
 
 	const gridW = widthCells * cellSize;
@@ -43,8 +43,8 @@ export default function grid(ctx: CanvasRenderingContext2D, gameState: GameState
 }
 
 export function cellSizeHelper(ctx: CanvasRenderingContext2D, gameState: GameState): number {
-	const widthCells = gameState.settings.gridWidth as number;
-	const heightCells = gameState.settings.gridHeight as number;
+	const widthCells = gameState.settings.gridWidth;
+	const heightCells = gameState.settings.gridHeight;
 	const fieldW = ctx.canvas.width - 32;
 	const fieldH = ctx.canvas.height - 96;
 	const cellSize = Math.min(
@@ -55,8 +55,8 @@ export function cellSizeHelper(ctx: CanvasRenderingContext2D, gameState: GameSta
 }
 
 export function cellPositionHelper(ctx: CanvasRenderingContext2D, gameState: GameState, position: [number, number], cellSizeInput: number | undefined): [number, number] {
-	const widthCells = gameState.settings.gridWidth as number;
-	const heightCells = gameState.settings.gridHeight as number;
+	const widthCells = gameState.settings.gridWidth;
+	const heightCells = gameState.settings.gridHeight;
 	const cellSize = cellSizeInput || cellSizeHelper(ctx, gameState);
 	const gridW = widthCells * cellSize;
 	const gridH = heightCells * cellSize;

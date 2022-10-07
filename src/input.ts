@@ -137,9 +137,9 @@ export function tickPlayerInput() {
 		for (const key of ['z', 'x', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright']) {
 			keyboardActive = keyboardActive || keysPressedMap[key];
 		}
-		
+
 		if (keyboardActive) {
-			let player = new Player(null);
+			const player = new Player(null);
 			newControllers.push(player);
 		}
 	}
