@@ -5,6 +5,7 @@ export type Settings = {
 	wrap: boolean;
 	gridWidth: number;
 	gridHeight: number;
+	testDisplay: boolean;
 };
 
 const options: Array<[string, string, any[]] | [string]> = [
@@ -13,6 +14,7 @@ const options: Array<[string, string, any[]] | [string]> = [
 	['wrap?', 'wrap', [true, false]],
 	['width?', 'gridWidth', [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
 	['height?', 'gridHeight', [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
+	['test mode?', 'testDisplay', [false, true]],
 	['press a to start'],
 ];
 let cursorPos = 1;
