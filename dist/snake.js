@@ -44,6 +44,7 @@ export class Snake {
       } else {
         this.facing = 3;
       }
+      this.lastFacing = this.facing;
       this.tail.push([x2, y2]);
     }
     const player = gameState.players.find((v) => v.controllerId === this.player);
@@ -63,7 +64,7 @@ export class Snake {
       f = 3;
     }
     let badDirection;
-    switch (this.facing) {
+    switch (this.lastFacing) {
       case 1: {
         badDirection = 3;
         break;
@@ -144,6 +145,7 @@ export class Snake {
     ctx.stroke();
   }
   move(gameState) {
+    this.lastFacing = this.facing;
     let head = this.tail[0];
     switch (this.facing) {
       case 1: {
