@@ -73,22 +73,16 @@ export class Snake {
       this.facing = f;
     }
     if (this.facing === 0) {
-      let x2 = Math.floor(Math.random() * gameState.settings.gridWidth);
-      let y2 = Math.floor(Math.random() * gameState.settings.gridHeight);
-      let cx = gameState.settings.gridWidth / 2;
-      let cy = gameState.settings.gridHeight / 2;
+      const x2 = Math.floor(Math.random() * gameState.settings.gridWidth);
+      const y2 = Math.floor(Math.random() * gameState.settings.gridHeight);
+      const cx = gameState.settings.gridWidth / 2;
+      const cy = gameState.settings.gridHeight / 2;
       if (Math.abs(cx - x2) > Math.abs(cy - y2)) {
-        if (x2 > cx) {
-          this.facing = 4;
-        } else {
-          this.facing = 2;
-        }
+        this.facing = x2 > cx ? 4 : 2;
+      } else if (y2 > cy) {
+        this.facing = 1;
       } else {
-        if (y2 > cy) {
-          this.facing = 1;
-        } else {
-          this.facing = 3;
-        }
+        this.facing = 3;
       }
       this.tail.push([x2, y2]);
     }
@@ -102,11 +96,11 @@ export class Snake {
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.beginPath();
-    let headPos = cellPositionHelper(ctx, gameState, this.tail[0], ctx.lineWidth);
+    const headPos = cellPositionHelper(ctx, gameState, this.tail[0], ctx.lineWidth);
     ctx.moveTo(headPos[0], headPos[1]);
     ctx.lineTo(headPos[0], headPos[1]);
     for (const position of this.tail) {
-      let pos = cellPositionHelper(ctx, gameState, position, ctx.lineWidth);
+      const pos = cellPositionHelper(ctx, gameState, position, ctx.lineWidth);
       ctx.lineTo(pos[0], pos[1]);
     }
     ctx.stroke();

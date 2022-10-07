@@ -89,7 +89,7 @@ export function tickPlayerInput() {
       keyboardActive = keyboardActive || keysPressedMap[key];
     }
     if (keyboardActive) {
-      let player = new Player(null);
+      const player = new Player(null);
       newControllers.push(player);
     }
   }
