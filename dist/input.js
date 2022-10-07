@@ -14,13 +14,13 @@ export class Player {
       this.controllerId = controller.index;
       this.movement = [controller.axes[0], controller.axes[1]];
       this.buttons = [controller.buttons[1].pressed, controller.buttons[0].pressed];
-      this.snake = new Snake();
+      this.snake = new Snake(controller.index);
       this.disconnected = false;
     } else {
       this.controllerId = -1;
       this.movement = [0, 0];
       this.buttons = [keysPressedMap.z, keysPressedMap.x];
-      this.snake = new Snake();
+      this.snake = new Snake(-1);
       this.disconnected = false;
     }
     this.buttonsDirty = [false, false];
@@ -89,7 +89,8 @@ export function tickPlayerInput() {
       keyboardActive = keyboardActive || keysPressedMap[key];
     }
     if (keyboardActive) {
-      newControllers.push(new Player(null));
+      let player = new Player(null);
+      newControllers.push(player);
     }
   }
   for (const player of newControllers) {
