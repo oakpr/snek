@@ -13,14 +13,23 @@ document.addEventListener('keyup', event => {
 });
 
 export class Player {
+	// The ID of the controller as known by the browser
 	controllerId: number;
+	// The controller's "movement" last frame
 	oldMovement: [number, number];
+	// The controller's "movement" this frame
 	movement: [number, number];
+	// Whether a given movement axis has changed
 	movementDirty: [boolean, boolean];
+	// The controller's buttons last frame
 	oldButtons: boolean[];
+	// The controller's buttons this frame
 	buttons: boolean[];
+	// Whether a given button has changed
 	buttonsDirty: boolean[];
+	// The "snake" associated with this player
 	snake: Snake;
+	// Whether this player disconnected this frame
 	disconnected: boolean;
 
 	constructor(controller: Gamepad | undefined) {
@@ -29,13 +38,13 @@ export class Player {
 			// https://w3c.github.io/gamepad/#remapping
 			this.movement = [controller.axes[0], controller.axes[1]];
 			this.buttons = [controller.buttons[1].pressed, controller.buttons[0].pressed];
-			this.snake = new Snake(); // When the player is implemented, add this
+			this.snake = new Snake(controller.index); // When the player is implemented, add this
 			this.disconnected = false;
 		} else {
 			this.controllerId = -1;
 			this.movement = [0, 0];
 			this.buttons = [keysPressedMap.z, keysPressedMap.x];
-			this.snake = new Snake();
+			this.snake = new Snake(-1);
 			this.disconnected = false;
 		}
 
@@ -128,9 +137,10 @@ export function tickPlayerInput() {
 		for (const key of ['z', 'x', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright']) {
 			keyboardActive = keyboardActive || keysPressedMap[key];
 		}
-
+		
 		if (keyboardActive) {
-			newControllers.push(new Player(null));
+			let player = new Player(null);
+			newControllers.push(player);
 		}
 	}
 
