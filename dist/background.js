@@ -30,19 +30,13 @@ let [bgcanvas, bgctx, bgpi, bgbuf] = [void 0, void 0, void 0, void 0];
 if (bgres) {
   [bgcanvas, bgctx, bgpi, bgbuf] = bgres;
 }
-export function background(game_state, ctx) {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !bgres || !game_state.settings.enableBg) {
-    ctx.fillStyle = "rgb(32, 32, 32)";
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    if (!bgres && game_state.settings.enableBg) {
-      ctx.strokeStyle = "white";
-      ctx.textAlign = "center";
-      ctx.strokeText("webgl broken?", ctx.canvas.width / 2, ctx.canvas.height / 2);
-    }
-  } else {
+export function background(game_state) {
+  if (bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     renderShader(bgctx, bgpi, bgbuf, game_state.clock / 1e3);
-    ctx.drawImage(bgcanvas, 0, 0);
   }
+  window.requestAnimationFrame(() => {
+    background(game_state);
+  });
 }
 function nicerModulo(n, quot) {
   while (n > quot) {
@@ -57,8 +51,7 @@ function initShader() {
   if (typeof OffscreenCanvas === "undefined") {
     return false;
   }
-  const main = document.querySelector("#viewport");
-  const canvas = new OffscreenCanvas(main.width, main.height);
+  const canvas = document.querySelector("#bg");
   const gl = canvas.getContext("webgl");
   if (!gl) {
     return false;

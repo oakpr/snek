@@ -15,13 +15,19 @@ const gameState = {
 const canvas = document.querySelector("#viewport");
 const ctx = canvas.getContext("2d");
 const frameTimeHistory = [];
+background(gameState);
 function tick() {
+  if (gameState.settings.enableBg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  } else {
+    ctx.fillStyle = "rgb(32, 32, 32)";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
   input.tickPlayerInput();
   gameState.players = input.players;
   const delta = Date.now() - lastTick;
   lastTick = Date.now();
   gameState.clock += delta;
-  background(gameState, ctx);
   grid(ctx, gameState);
   if (gameState.gameStarted) {
   } else {
