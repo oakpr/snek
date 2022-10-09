@@ -1,10 +1,15 @@
 import {Snake} from './snake.js';
+import type {GameState} from './index.js';
 
+// The maximum number of players.
+// Edit this to create hell.
 export const maxPlayers = 2;
 
-export const players: Array<Player | undefined> = [];
-
+// A map of which keys are currently pressed.
+// Browsers don't provide a facility for checking whether a key is *currently* pressed,
+// so I have to keep track myself.
 const keysPressedMap: Record<string, boolean> = {};
+// Set up event handlers for tracking keypresses.
 document.addEventListener('keydown', event => {
 	keysPressedMap[event.key.toLocaleLowerCase()] = true;
 });
@@ -12,6 +17,7 @@ document.addEventListener('keyup', event => {
 	keysPressedMap[event.key.toLocaleLowerCase()] = false;
 });
 
+// All of the per-player data (including the snake) is here.
 export class Player {
 	// The ID of the controller as known by the browser
 	controllerId: number;
@@ -32,7 +38,9 @@ export class Player {
 	// Whether this player disconnected this frame
 	disconnected: boolean;
 
+	// Construct a player from a gamepad, or pass undefined to construct from the keyboard.
 	constructor(controller: Gamepad | undefined) {
+		// Initialize the movement, buttons, and snake according to the controller or keyboard.
 		if (controller) {
 			this.controllerId = controller.index;
 			// https://w3c.github.io/gamepad/#remapping
@@ -48,12 +56,14 @@ export class Player {
 			this.disconnected = false;
 		}
 
+		// Initialize everything else to defaults.
 		this.buttonsDirty = [false, false];
 		this.movementDirty = [false, false];
 		this.oldButtons = this.buttons;
 		this.oldMovement = this.movement;
 	}
 
+	// Tick this player's input.
 	// eslint-disable-next-line complexity
 	tick() {
 		if (this.controllerId >= 0) {
@@ -92,13 +102,15 @@ export class Player {
 				this.disconnected = true;
 			}
 		} else {
+			// Write movement from keys
 			this.movement = [0, 0];
 			this.movement[0] -= Number(keysPressedMap.arrowleft ? 1 : 0);
 			this.movement[0] += Number(keysPressedMap.arrowright ? 1 : 0);
 			this.movement[1] -= Number(keysPressedMap.arrowup ? 1 : 0);
 			this.movement[1] += Number(keysPressedMap.arrowdown ? 1 : 0);
+			// Write buttons
 			this.buttons = [keysPressedMap.z || false, keysPressedMap.x || false];
-
+			// If escape is pressed, die
 			if (keysPressedMap.escape) {
 				this.disconnected = true;
 			}
@@ -112,25 +124,29 @@ export class Player {
 		}
 
 		// Detect if movement has changed
+		// A bit broken on controllers...
 		this.movementDirty = [false, false];
 		for (let i = 0; i < this.oldMovement.length; i++) {
 			this.movementDirty[i] = sign(Math.round(this.oldMovement[i] * 0.6)) !== sign(Math.round(this.movement[i] * 0.6));
 		}
 
+		// Write old movement
 		this.oldMovement = this.movement;
 		// Detect if buttons have changed
 		for (let i = 0; i < this.oldButtons.length; i++) {
 			this.buttonsDirty[i] = this.oldButtons[i] !== this.buttons[i];
 		}
 
+		// Write old buttons
 		this.oldButtons = this.buttons;
 	}
 }
 
-export function tickPlayerInput() {
+// Tick all players' controllers and look for new ones.
+export function tickPlayerInput(gameState: GameState) {
 	// Look for new controllers
 	// eslint-disable-next-line unicorn/prefer-set-has
-	const existingPlayers: number[] = players.filter(Boolean).map(v => v.controllerId);
+	const existingPlayers: number[] = gameState.players.filter(Boolean).map(v => v.controllerId);
 	const newControllers = navigator.getGamepads().filter(Boolean).filter(v => !existingPlayers.includes(v.index)).filter(v => v.buttons.some(Boolean)).map(v => new Player(v));
 	if (!existingPlayers.includes(-1)) {
 		let keyboardActive: boolean;
@@ -144,21 +160,23 @@ export function tickPlayerInput() {
 		}
 	}
 
+	// Negotiate a slot for new players to occupy
 	for (const player of newControllers) {
-		const emptySlot = players.indexOf(null);
+		const emptySlot = gameState.players.indexOf(null);
 		if (emptySlot !== -1) {
-			players[emptySlot] = player;
-		} else if (players.length < maxPlayers) {
-			players.push(player);
+			gameState.players[emptySlot] = player;
+		} else if (gameState.players.length < maxPlayers) {
+			gameState.players.push(player);
 		} else {
 			console.log('can\'t add new player');
 			continue;
 		}
 
-		console.log(players);
+		console.log(gameState.players);
 	}
 
-	for (const player of players) {
+	// Tick all players, and remove disconnecting ones.
+	for (const player of gameState.players) {
 		if (!player) {
 			continue;
 		}
@@ -168,12 +186,13 @@ export function tickPlayerInput() {
 		// Remove a player if they are disconnecting
 		if (player.disconnected) {
 			console.log(`dropped player ${player.controllerId}`);
-			players[players.indexOf(player)] = null;
+			gameState.players[gameState.players.indexOf(player)] = null;
 			continue;
 		}
 	}
 }
 
+// Return the sign of a number concisely.
 function sign(n: number) {
 	return n ? (n < 0 ? -1 : 1) : 0;
 }

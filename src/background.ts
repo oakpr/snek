@@ -3,6 +3,8 @@ import type {GameState} from 'src';
 
 // Mostly copied from https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API
 
+// The source of the WebGL program's vertex shader.
+// Not terribly interesting...
 const vsSource = `
 	attribute vec4 aVertexPosition;
 
@@ -13,52 +15,60 @@ const vsSource = `
 		gl_Position = aVertexPosition;
 	}
 `;
+
+// The source of the WebGL program's fragment shader.
 const fsSource = `
 	uniform highp float timer;
 
 	void main() {
+		// Initialize the internal coordinates to match the fragment coordinates.
 		highp float y = gl_FragCoord.y;
 		highp float x = gl_FragCoord.x;
+		// Offset the internal coordinates by some wacky trig functions.
 		y += (sin(((x / 10.0) + (timer * 3.0)) * (10.0 + sin(timer)) / 10.0)) * 3.0 + (timer * 30.0);
 		x -= sin((y / 20.0) + (timer / 5.0) + (sin(y/5.0))) * 500.0;
+		// Offset the timer as a function of the internal coordinates.
 		highp float offset_timer = (timer / 5.0) + (sin(y/5.0) + (timer / -0.5) / 5.0) + (cos(x / 5.0) + (timer / 10.0)) / 15.0;
+		// Calculate the rgb values by treating the offset timer as a hue sort of thing.
 		lowp float r = 0.5 + (0.5 * sin(offset_timer));
 		lowp float g = 0.5 + (0.5 * sin(offset_timer + (2.0 * 3.14 / 3.0)));
 		lowp float b = 0.5 + (0.5 * sin(offset_timer + (4.0 * 3.14 / 3.0)));
+		// Write the rgb color to the screen.
 		gl_FragColor = vec4(r, g, b, 1.0);
 	}
 `;
 
-const bgTileSize = 12;
-
+// The result of the initShader function.
 const bgres = initShader();
+// The background canvas, context, program info, and texture buffers.
+// These are used in render_shader.
 let [bgcanvas, bgctx, bgpi, bgbuf]: [HTMLCanvasElement, WebGLRenderingContext, ProgramInfo, WebGlBuffers] = [undefined, undefined, undefined, undefined];
 if (bgres) {
 	[bgcanvas, bgctx, bgpi, bgbuf] = bgres;
 }
 
+/**
+ * Start the background render loop.
+ * @param game_state Pass a reference to the game state; the background needs to check enableBg every frame.
+ */
 export function background(game_state: GameState) {
-	if (bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+	if (
+		// If bgctx is a WebGL context (as opposed to undefined) and...
+		bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg
+		// If the user is willing to see animations...
+		&& !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+	) {
+		// Draw the shader!
 		renderShader(bgctx, bgpi, bgbuf, game_state.clock / 1000);
 	}
 
+	// Wait 1/30 of a second before running again.
 	setTimeout(() => {
 		background(game_state);
 	}, 33);
 }
 
-function nicerModulo(n: number, quot: number): number {
-	while (n > quot) {
-		n -= quot;
-	}
-
-	while (n < 0) {
-		n += quot;
-	}
-
-	return n;
-}
-
+// Unsure exactly how this works, it's something that was in the MDN tutorial.
 type ProgramInfo = {
 	program: WebGLProgram;
 	attribLocations: {
@@ -69,10 +79,12 @@ type ProgramInfo = {
 		modelViewMatrix: WebGLUniformLocation;
 	};
 };
+// Unsure exactly how this works, it's something that was in the MDN tutorial.
 type WebGlBuffers = {
 	position: WebGLBuffer;
 };
 
+// Sets up the shaders, or returns false if there was a failure.
 function initShader(): [HTMLCanvasElement, WebGLRenderingContext, ProgramInfo, WebGlBuffers] | false {
 	if (typeof OffscreenCanvas === 'undefined') {
 		return false;

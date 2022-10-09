@@ -1,6 +1,7 @@
 import type {GameState} from 'src';
 import {cellSizeHelper, cellPositionHelper} from './grid.js';
 
+// Tick all of the players' snakes.
 export default function snake(ctx: CanvasRenderingContext2D, gameState: GameState, delta: number) {
 	// Iterate over all players and run their snake ticks
 	for (const player of gameState.players) {
@@ -12,6 +13,7 @@ export default function snake(ctx: CanvasRenderingContext2D, gameState: GameStat
 	}
 }
 
+// The facing direction of the snake. `Uninit` means the snake should be initialized next frame.
 enum Facing {
 	Uninit,
 	Up,
@@ -52,15 +54,15 @@ export class Snake {
 	// Also, initialize the snake at a random position facing the center, if it looks uninitialized.
 	// eslint-disable-next-line complexity
 	tick(gameState: GameState, ctx: CanvasRenderingContext2D, delta: number) {
-		if (!gameState.gameStarted) {
-			return;
-		}
-
+		// Init the snake if it looks uninitialized.
 		if (this.facing === Facing.Uninit) {
+			// Chose a random position in grid space.
 			const x = Math.floor(Math.random() * gameState.settings.gridWidth);
 			const y = Math.floor(Math.random() * gameState.settings.gridHeight);
+			// Copy the center of the grid into scope.
 			const cx = gameState.settings.gridWidth / 2;
 			const cy = gameState.settings.gridHeight / 2;
+			// Face toward the center.
 			if (Math.abs(cx - x) > Math.abs(cy - y)) {
 				this.facing = x > cx ? Facing.Left : Facing.Right;
 			} else if (y > cy) {
@@ -69,14 +71,17 @@ export class Snake {
 				this.facing = Facing.Down;
 			}
 
+			// Write the position and facing.
 			this.lastFacing = this.facing;
-
 			this.tail.push([x, y]);
 		}
 
+		// Get the associated player for this snake.
 		const player = gameState.players.find(v => v.controllerId === this.player);
 		const x: number = player.movement[0];
 		const y: number = player.movement[1];
+
+		// Write the snake's facing angle.
 		let f = this.facing;
 		if (x > 0) {
 			f = Facing.Right;
@@ -94,6 +99,7 @@ export class Snake {
 			f = Facing.Down;
 		}
 
+		// Determine the direction the snake came from.
 		let badDirection: Facing;
 		switch (this.lastFacing) {
 			case Facing.Up: {
@@ -121,12 +127,15 @@ export class Snake {
 			}
 		}
 
+		// If the snake would go back in the direction it came from, don't.
 		if (f !== badDirection) {
 			this.facing = f;
 		}
 
+		// Tick the movement timer.
 		this.timer += delta;
 		if (this.timer > this.speed()) {
+			// If the timer is complete, move and reset it.
 			this.move(gameState);
 			this.timer = 0;
 		}

@@ -8,32 +8,56 @@ import menu, {defaultSettings} from './menu.js';
 import type {Snake} from './snake.js';
 import snake from './snake.js';
 
+// The entire state of the game.
+// Game steps should not store their state internally; that is bad practice.
 export type GameState = {
+	// The number of milliseconds since the start of the game.
 	clock: number;
+	// Unused, should be removed.
+	// Players' scores are stored individually.
 	score: number;
+	// The list of players.
+	// A player is undefined after they have left.
 	players: Array<Player | undefined>;
+	// The game's settings, as defined by the player in the main menu.
 	settings: Settings;
+	// Whether the game has started.
+	// If this is false, we're in the menu.
 	gameStarted: boolean;
 };
 
+// The time of the last tick.
 let lastTick = Date.now();
+
+// The default game state is initialized here.
 const gameState: GameState = {
+	// Players will be populated as the game receives input.
 	players: [],
 	clock: 0,
 	score: 0,
+	// Sets default settings as defined in menu.ts
 	settings: defaultSettings,
+	// The game starts on the menu.
+	// TODO: Rewrite this as an enum for extra "dead" or "victory" states.
 	gameStarted: false,
 };
+
+// A persistent reference to the game's canvas element.
 const canvas: HTMLCanvasElement = document.querySelector('#viewport');
+// The rendering context used to draw the game.
 const ctx = canvas.getContext('2d');
 
+// A rotating buffer of recent frame intervals.
+// Only updates when the frame rate display is enabled.
 const frameTimeHistory: number[] = [];
 
-// Run background loop
+// Start background loop.
+// This is done outside of the main loop for performance reasons.
 background(gameState);
 
+// The entry point for the main loop.
 function tick() {
-	// Wipe screen
+	// Wipe the screen, with either transparency or gray, depending on the settings.
 	if (gameState.settings.enableBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	} else {
@@ -42,8 +66,7 @@ function tick() {
 	}
 
 	// Tick player input
-	input.tickPlayerInput();
-	gameState.players = input.players;
+	input.tickPlayerInput(gameState);
 
 	// Get delta time
 	const delta = Date.now() - lastTick;
@@ -54,14 +77,12 @@ function tick() {
 	grid(ctx, gameState);
 
 	if (gameState.gameStarted) {
-		// Do normal game things
+		// Tick snakes
+		snake(ctx, gameState, delta);
 	} else {
 		// Draw the pre-game menu
 		menu(ctx, gameState);
 	}
-
-	// Tick snakes
-	snake(ctx, gameState, delta);
 
 	// Draw HUD
 	hud(gameState, delta, ctx);
@@ -83,20 +104,26 @@ function tick() {
 		ctx.stroke();
 	}
 
+	// Draw the frame-rate counter, if it's enabled.
 	if (gameState.settings.showFrameRate) {
+		// Push the latest frame timing to the buffer.
 		frameTimeHistory.push(delta);
+		// Trim the buffer down to size.
 		while (frameTimeHistory.length > 60) {
 			frameTimeHistory.shift();
 		}
 
+		// Sum the frame times.
 		let avg = 0;
 		for (const time of frameTimeHistory) {
 			avg += time;
 		}
 
+		// Divide the sum to get the mean.
 		avg /= frameTimeHistory.length;
-
+		// Convert from milliseconds per frame to frames per second.
 		avg = 1000 / avg;
+		// Draw the frame rate display.
 		ctx.lineWidth = 1;
 		ctx.strokeStyle = 'white';
 		ctx.font = '16px Major Mono Display';
@@ -105,8 +132,8 @@ function tick() {
 		ctx.strokeText(`fps: ${avg.toPrecision(3)}`, 10, 10);
 	}
 
+	// Wait for the next frame if frame limit is enabled, otherwise immediately run again.
 	if (gameState.settings.waitForFrame) {
-		// Wait for a frame, then call me again.
 		window.requestAnimationFrame(tick);
 	} else {
 		setTimeout(tick, 0);
