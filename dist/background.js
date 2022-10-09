@@ -34,9 +34,9 @@ export function background(game_state) {
   if (bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     renderShader(bgctx, bgpi, bgbuf, game_state.clock / 1e3);
   }
-  window.requestAnimationFrame(() => {
+  setTimeout(() => {
     background(game_state);
-  });
+  }, 33);
 }
 function nicerModulo(n, quot) {
   while (n > quot) {
