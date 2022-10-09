@@ -23,17 +23,16 @@ function tick() {
     ctx.fillStyle = "rgb(32, 32, 32)";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
-  input.tickPlayerInput();
-  gameState.players = input.players;
+  input.tickPlayerInput(gameState);
   const delta = Date.now() - lastTick;
   lastTick = Date.now();
   gameState.clock += delta;
   grid(ctx, gameState);
   if (gameState.gameStarted) {
+    snake(ctx, gameState, delta);
   } else {
     menu(ctx, gameState);
   }
-  snake(ctx, gameState, delta);
   hud(gameState, delta, ctx);
   if (gameState.settings.testDisplay) {
     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";

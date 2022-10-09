@@ -29,9 +29,6 @@ export class Snake {
     return 1e3 / this.len;
   }
   tick(gameState, ctx, delta) {
-    if (!gameState.gameStarted) {
-      return;
-    }
     if (this.facing === 0) {
       const x2 = Math.floor(Math.random() * gameState.settings.gridWidth);
       const y2 = Math.floor(Math.random() * gameState.settings.gridHeight);
