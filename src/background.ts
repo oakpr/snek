@@ -42,9 +42,9 @@ export function background(game_state: GameState) {
 		renderShader(bgctx, bgpi, bgbuf, game_state.clock / 1000);
 	}
 
-	window.requestAnimationFrame(() => {
+	setTimeout(() => {
 		background(game_state);
-	});
+	}, 33);
 }
 
 function nicerModulo(n: number, quot: number): number {
