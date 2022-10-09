@@ -32,24 +32,19 @@ const fsSource = `
 const bgTileSize = 12;
 
 const bgres = initShader();
-let [bgcanvas, bgctx, bgpi, bgbuf] = [undefined, undefined, undefined, undefined];
+let [bgcanvas, bgctx, bgpi, bgbuf]: [HTMLCanvasElement, WebGLRenderingContext, ProgramInfo, WebGlBuffers] = [undefined, undefined, undefined, undefined];
 if (bgres) {
 	[bgcanvas, bgctx, bgpi, bgbuf] = bgres;
 }
 
-export function background(game_state: GameState, ctx: CanvasRenderingContext2D) {
-	if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !bgres || !game_state.settings.enableBg) {
-		ctx.fillStyle = 'rgb(32, 32, 32)';
-		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		if (!bgres && game_state.settings.enableBg) {
-			ctx.strokeStyle = 'white';
-			ctx.textAlign = 'center';
-			ctx.strokeText('webgl broken?', ctx.canvas.width / 2, ctx.canvas.height / 2);
-		}
-	} else {
+export function background(game_state: GameState) {
+	if (bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		renderShader(bgctx, bgpi, bgbuf, game_state.clock / 1000);
-		ctx.drawImage(bgcanvas, 0, 0);
 	}
+
+	window.requestAnimationFrame(() => {
+		background(game_state);
+	});
 }
 
 function nicerModulo(n: number, quot: number): number {
@@ -78,14 +73,12 @@ type WebGlBuffers = {
 	position: WebGLBuffer;
 };
 
-function initShader(): [OffscreenCanvas, WebGLRenderingContext, ProgramInfo, WebGlBuffers] | false {
+function initShader(): [HTMLCanvasElement, WebGLRenderingContext, ProgramInfo, WebGlBuffers] | false {
 	if (typeof OffscreenCanvas === 'undefined') {
 		return false;
 	}
 
-	const main: HTMLCanvasElement = document.querySelector('#viewport');
-
-	const canvas = new OffscreenCanvas(main.width, main.height);
+	const canvas: HTMLCanvasElement = document.querySelector('#bg');
 	const gl = canvas.getContext('webgl');
 	if (!gl) {
 		return false;

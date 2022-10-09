@@ -29,7 +29,18 @@ const ctx = canvas.getContext('2d');
 
 const frameTimeHistory: number[] = [];
 
+// Run background loop
+background(gameState);
+
 function tick() {
+	// Wipe screen
+	if (gameState.settings.enableBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	} else {
+		ctx.fillStyle = 'rgb(32, 32, 32)';
+		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	}
+
 	// Tick player input
 	input.tickPlayerInput();
 	gameState.players = input.players;
@@ -38,9 +49,6 @@ function tick() {
 	const delta = Date.now() - lastTick;
 	lastTick = Date.now();
 	gameState.clock += delta;
-
-	// Draw background
-	background(gameState, ctx);
 
 	// Draw grid
 	grid(ctx, gameState);
