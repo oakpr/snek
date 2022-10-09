@@ -83,7 +83,9 @@ function initShader(): [OffscreenCanvas, WebGLRenderingContext, ProgramInfo, Web
 		return false;
 	}
 
-	const canvas = new OffscreenCanvas(480, 480);
+	const main: HTMLCanvasElement = document.querySelector('#viewport');
+
+	const canvas = new OffscreenCanvas(main.width, main.height);
 	const gl = canvas.getContext('webgl');
 	if (!gl) {
 		return false;

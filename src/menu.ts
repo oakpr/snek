@@ -38,7 +38,7 @@ let suppressX = false;
 export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState) {
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
 	ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 128);
-	const entryRange = 3;
+	const entryRange = Math.round((ctx.canvas.height - 128) / 128);
 	const entrySpacing = 48;
 	for (let i = -entryRange; i < entryRange + 1; i++) {
 		const index = cursorPos + i;
