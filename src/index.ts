@@ -4,7 +4,7 @@ import hud from './hud.js';
 import type {Player} from './input.js';
 import * as input from './input.js';
 import type {Settings} from './menu.js';
-import menu from './menu.js';
+import menu, {defaultSettings} from './menu.js';
 import type {Snake} from './snake.js';
 import snake from './snake.js';
 
@@ -21,17 +21,13 @@ const gameState: GameState = {
 	players: [],
 	clock: 0,
 	score: 0,
-	settings: {
-		enableBg: true,
-		wrap: false,
-		gridWidth: 10,
-		gridHeight: 10,
-		testDisplay: false,
-	},
+	settings: defaultSettings,
 	gameStarted: false,
 };
 const canvas: HTMLCanvasElement = document.querySelector('#viewport');
 const ctx = canvas.getContext('2d');
+
+const frameTimeHistory: number[] = [];
 
 function tick() {
 	// Tick player input
@@ -79,8 +75,34 @@ function tick() {
 		ctx.stroke();
 	}
 
-	// Wait for a frame, then call me again.
-	window.requestAnimationFrame(tick);
+	if (gameState.settings.showFrameRate) {
+		frameTimeHistory.push(delta);
+		while (frameTimeHistory.length > 60) {
+			frameTimeHistory.shift();
+		}
+
+		let avg = 0;
+		for (const time of frameTimeHistory) {
+			avg += time;
+		}
+
+		avg /= frameTimeHistory.length;
+
+		avg = 1000 / avg;
+		ctx.lineWidth = 1;
+		ctx.strokeStyle = 'white';
+		ctx.font = '16px Major Mono Display';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'top';
+		ctx.strokeText(`fps: ${avg.toPrecision(3)}`, 10, 10);
+	}
+
+	if (gameState.settings.waitForFrame) {
+		// Wait for a frame, then call me again.
+		window.requestAnimationFrame(tick);
+	} else {
+		setTimeout(tick, 0);
+	}
 }
 
 tick();
