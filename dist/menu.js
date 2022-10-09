@@ -1,3 +1,12 @@
+export const defaultSettings = {
+  enableBg: true,
+  wrap: false,
+  gridWidth: 10,
+  gridHeight: 10,
+  testDisplay: false,
+  waitForFrame: true,
+  showFrameRate: false
+};
 const options = [
   ["snek menu"],
   ["enable bg?", "enableBg", [true, false]],
@@ -5,6 +14,8 @@ const options = [
   ["width?", "gridWidth", [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
   ["height?", "gridHeight", [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
   ["test mode?", "testDisplay", [false, true]],
+  ["frame limit?", "waitForFrame", [true, false]],
+  ["frame display?", "showFrameRate", [false, true]],
   ["press a to start"]
 ];
 let cursorPos = 1;
