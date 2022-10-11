@@ -15,6 +15,8 @@ export type Settings = {
 	waitForFrame: boolean;
 	// Display the average frame rate.
 	showFrameRate: boolean;
+	// Whether to enable dynamic music
+	music: boolean;
 };
 export const defaultSettings = {
 	enableBg: true,
@@ -24,6 +26,7 @@ export const defaultSettings = {
 	testDisplay: false,
 	waitForFrame: true,
 	showFrameRate: false,
+	music: true,
 };
 
 // The list of options to display in the menu.
@@ -39,6 +42,7 @@ const options: Array<[string, string, any[]] | [string]> = [
 	['test mode?', 'testDisplay', [false, true]],
 	['frame limit?', 'waitForFrame', [true, false]],
 	['frame display?', 'showFrameRate', [false, true]],
+	['music?', 'music', [true, false]],
 	['press a to start'],
 ];
 

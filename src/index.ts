@@ -5,6 +5,7 @@ import type {Player} from './input.js';
 import * as input from './input.js';
 import type {Settings} from './menu.js';
 import menu, {defaultSettings} from './menu.js';
+import music from './music.js';
 import type {Snake} from './snake.js';
 import snake from './snake.js';
 
@@ -54,6 +55,10 @@ const frameTimeHistory: number[] = [];
 // Start background loop.
 // This is done outside of the main loop for performance reasons.
 background(gameState);
+
+// Start music loop.
+// This is done outside of the main loop because it doesn't have to run in lockstep with gameplay.
+music(gameState);
 
 // The entry point for the main loop.
 function tick() {
