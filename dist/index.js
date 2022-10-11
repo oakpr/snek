@@ -3,6 +3,7 @@ import grid, {cellPositionHelper, cellSizeHelper} from "./grid.js";
 import hud from "./hud.js";
 import * as input from "./input.js";
 import menu, {defaultSettings} from "./menu.js";
+import music from "./music.js";
 import snake from "./snake.js";
 let lastTick = Date.now();
 const gameState = {
@@ -16,6 +17,7 @@ const canvas = document.querySelector("#viewport");
 const ctx = canvas.getContext("2d");
 const frameTimeHistory = [];
 background(gameState);
+music(gameState);
 function tick() {
   if (gameState.settings.enableBg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);

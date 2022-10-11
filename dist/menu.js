@@ -5,7 +5,8 @@ export const defaultSettings = {
   gridHeight: 10,
   testDisplay: false,
   waitForFrame: true,
-  showFrameRate: false
+  showFrameRate: false,
+  music: true
 };
 const options = [
   ["snek menu"],
@@ -16,6 +17,7 @@ const options = [
   ["test mode?", "testDisplay", [false, true]],
   ["frame limit?", "waitForFrame", [true, false]],
   ["frame display?", "showFrameRate", [false, true]],
+  ["music?", "music", [true, false]],
   ["press a to start"]
 ];
 let cursorPos = 1;
