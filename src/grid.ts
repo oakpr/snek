@@ -24,17 +24,17 @@ export default function grid(ctx: CanvasRenderingContext2D, gameState: GameState
 	ctx.lineWidth = 2;
 	ctx.beginPath();
 	// Draw the top-left corner.
-	ctx.moveTo(centerX - (gridW / 2), centerY - (gridH / 2));
+	ctx.moveTo(Math.round(centerX - (gridW / 2)), Math.round(centerY - (gridH / 2)));
 	// Top-right.
-	ctx.lineTo(centerX + (gridW / 2), centerY - (gridH / 2));
+	ctx.lineTo(Math.round(centerX + (gridW / 2)), Math.round(centerY - (gridH / 2)));
 	// Bottom-right.
-	ctx.lineTo(centerX + (gridW / 2), centerY + (gridH / 2));
+	ctx.lineTo(Math.round(centerX + (gridW / 2)), Math.round(centerY + (gridH / 2)));
 	// Bottom-left.
-	ctx.lineTo(centerX - (gridW / 2), centerY + (gridH / 2));
+	ctx.lineTo(Math.round(centerX - (gridW / 2)), Math.round(centerY + (gridH / 2)));
 	// Top-left again, to close the shape.
-	ctx.lineTo(centerX - (gridW / 2), centerY - (gridH / 2));
+	ctx.lineTo(Math.round(centerX - (gridW / 2)), Math.round(centerY - (gridH / 2)));
 	// Top-right again, to ensure consistent corners.
-	ctx.lineTo(centerX + (gridW / 2), centerY - (gridH / 2));
+	ctx.lineTo(Math.round(centerX + (gridW / 2)), Math.round(centerY - (gridH / 2)));
 	ctx.stroke();
 	ctx.beginPath();
 	// Set the stroke style again, this time to a slightly transparent black.
@@ -47,14 +47,14 @@ export default function grid(ctx: CanvasRenderingContext2D, gameState: GameState
 	const top = centerY - (gridH / 2);
 	// Draw vertical lines
 	for (let i = 1; i < widthCells; i++) {
-		ctx.moveTo(left + (cellSize * i), top);
-		ctx.lineTo(left + (cellSize * i), top + (cellSize * heightCells));
+		ctx.moveTo(Math.round(left + (cellSize * i)) + 0.5, Math.round(top));
+		ctx.lineTo(Math.round(left + (cellSize * i)) + 0.5, Math.round(top + (cellSize * heightCells)));
 	}
 
 	// Draw horizontal lines
 	for (let i = 1; i < heightCells; i++) {
-		ctx.moveTo(left, top + (cellSize * i));
-		ctx.lineTo(left + (cellSize * widthCells), top + (cellSize * i));
+		ctx.moveTo(Math.round(left), Math.round(top + (cellSize * i)) + 0.5);
+		ctx.lineTo(Math.round(left + (cellSize * widthCells)), Math.round(top + (cellSize * i)) + 0.5);
 	}
 
 	ctx.stroke();
