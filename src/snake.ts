@@ -1,5 +1,5 @@
 import type {GameState} from 'src';
-import {cellSizeHelper, cellPositionHelper} from './grid.js';
+import {cellSizeHelper, cellPositionHelper, interPos, distance, addPos} from './grid.js';
 import auto from './demo.js';
 
 // Tick all of the players' snakes.
@@ -267,56 +267,18 @@ export class Snake {
 			this.tail.pop();
 		}
 	}
+
+	// Check whether the snake intersects a given tile.
+	intersects(p: [number, number]): boolean {
+		// TODO
+		return false;
+	}
 }
 
-function addPos(a: [number, number], b: [number, number]): [number, number] {
-	return [a[0] + b[0], a[1] + b[1]];
-}
-
-function interPos(a: [number, number], b: [number, number], c: number) {
-	const delta: [number, number] = [(b[0] - a[0]) * c, (b[1] - a[1]) * c];
-	return addPos(a, delta);
-}
-
-function distance(a: [number, number], b: [number, number]): number {
-	return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
-}
-
-// this is part of the progam that should
-// add segments to the snek after it eats the fruit
-
-// needed somewhere to initalize newSegments
-// let newSegments = 0 
-export function expandSnake(amount){
-    newSegments += amount // adds new segments plus the amount decided on
-
-}
-export function onSnake(position){
-    return this.some(segment => {
-        return equalPositions(segment, position)
-    })
-}
-// this finds out if the two positions for the apple and the head of the snek are equal 
-function equalPositions(pos1, pos2){
-    return pos1.x === pos2.x && pos1.y === pos2.y
-}
-
-function addSegments(){
-    for (let i = o; i<newSegments; i++ ){
-        this.push({ ...this[this.length -1 ]})
-            
-    }
-    newSegments = 0
-// makes sure the segments stop adding 
-// there was also a function i had called addSegments() that did just that
-// export function update() {
-
-//     addSegments()
-//     const inputDirection = getInputDirection()
-//     for (let i  = snakeBody.length - 2; i >=0; i--) {
-//         snakeBody[i+1] = { ...snakeBody[i] }
-//     }
-
-//     snakeBody[0].x += inputDirection.x
-//     snakeBody[0].y += inputDirection.y
+// This should be converted into a method on the Snake class
+// Something like
+// intersects(p: [number, number]): boolean {snake.tail.some(segment => posCompare(segment, p))}
+//
+// export function onSnake(snake: Snake, position: [number, number]) {
+// 	return snake.tail.some(segment => equalPositions(segment, position));
 // }

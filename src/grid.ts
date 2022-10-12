@@ -108,3 +108,25 @@ export function cellPositionHelper(ctx: CanvasRenderingContext2D, gameState: Gam
 		top + (cellSize * (position[1] + 0.5)),
 	];
 }
+
+// Equality helper for our position type
+export function posCompare(a: [number, number], b: [number, number]): boolean {
+	return a[0] === b[0] && a[1] === b[1];
+}
+
+// Helper for adding positions together
+export function addPos(a: [number, number], b: [number, number]): [number, number] {
+	return [a[0] + b[0], a[1] + b[1]];
+}
+
+// Helper for interpolating between positions
+export function interPos(a: [number, number], b: [number, number], c: number) {
+	const delta: [number, number] = [(b[0] - a[0]) * c, (b[1] - a[1]) * c];
+	return addPos(a, delta);
+}
+
+// Helper for finding distance between cells.
+// Uses naive cardinal distance, not pythagorean!
+export function distance(a: [number, number], b: [number, number]): number {
+	return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+}
