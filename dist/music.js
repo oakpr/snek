@@ -10,7 +10,7 @@ for (const event of eventsToStartAudio) {
 }
 const tracks = [
   {
-    track: "./mus/synth.ogg",
+    location: "./mus/synth.ogg",
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
@@ -18,7 +18,7 @@ const tracks = [
     }
   },
   {
-    track: "./mus/bass.ogg",
+    location: "./mus/bass.ogg",
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
@@ -26,7 +26,7 @@ const tracks = [
     }
   },
   {
-    track: "./mus/drums.ogg",
+    location: "./mus/drums.ogg",
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
@@ -34,7 +34,7 @@ const tracks = [
     }
   },
   {
-    track: "./mus/lead.ogg",
+    location: "./mus/lead.ogg",
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
@@ -46,9 +46,9 @@ const tracks = [
   await actx.suspend();
   console.log("Setting up audio...");
   const trackPromises = tracks.map(async (track) => (async () => {
-    console.log(`Fetching ${track.track}...`);
-    const audioBuf = await fetch(track.track).then(async (response) => response.arrayBuffer());
-    console.log(`Got audio data for ${track.track}, ${audioBuf.byteLength} bytes`);
+    console.log(`Fetching ${track.location}...`);
+    const audioBuf = await fetch(track.location).then(async (response) => response.arrayBuffer());
+    console.log(`Got audio data for ${track.location}, ${audioBuf.byteLength} bytes`);
     const audioData = await actx.decodeAudioData(audioBuf);
     track.node = new AudioBufferSourceNode(actx, {
       buffer: audioData,
