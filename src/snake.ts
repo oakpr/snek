@@ -47,7 +47,7 @@ export class Snake {
 	// Return the snake's speed as a number of seconds per cell.
 	speed() {
 		// Placeholder thing
-		return 1000 / this.len;
+		return 1000 / Math.sqrt(2 * this.len);
 	}
 
 	// Tick the snake. Increase the timer by delta. If its timer exceeds speed(), reset it to zero and move().
@@ -138,6 +138,11 @@ export class Snake {
 			// If the timer is complete, move and reset it.
 			this.move(gameState);
 			this.timer = 0;
+		}
+
+		// If the player is mashing A, move immediately
+		if (player.buttonsDirty[0]) {
+			this.timer = this.speed();
 		}
 
 		// Draw the snake
