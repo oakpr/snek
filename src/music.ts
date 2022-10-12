@@ -38,7 +38,6 @@ export default function music(gameState: GameState) {
 	for (const track of tracks) {
 		const tgt = gameState.settings.music ? track.cond(gameState) : 0;
 		track.el.volume = (track.el.volume + tgt) / 2;
-		console.log(track.el.currentTime - tracks[0].el.currentTime);
 		if (Math.abs(track.el.currentTime - tracks[0].el.currentTime) > 0.2) {
 			track.el.fastSeek(tracks[0].el.currentTime);
 		}
