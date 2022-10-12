@@ -28,9 +28,9 @@ const tracks: Array<{el: HTMLAudioElement; cond: (s: GameState) => number}> = [
 	},
 ];
 
-for (const track of tracks) {
-	void track.el.play();
-}
+// For (const track of tracks) {
+// 	void track.el.play();
+// }
 
 // Tick the music 10 times per second.
 export default function music(gameState: GameState) {
