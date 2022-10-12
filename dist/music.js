@@ -1,37 +1,63 @@
+const actx = new AudioContext();
 const tracks = [
   {
-    el: document.querySelector("audio#synth"),
+    track: "./mus/synth.ogg",
+    node: void 0,
+    gain: new GainNode(actx),
     cond(state) {
       return state.gameStarted ? 1 : 0.5;
     }
   },
   {
-    el: document.querySelector("audio#bass"),
+    track: "./mus/bass.ogg",
+    node: void 0,
+    gain: new GainNode(actx),
     cond(state) {
-      return state.gameStarted ? 0.4 : 0;
+      return state.gameStarted ? 1 : 0;
     }
   },
   {
-    el: document.querySelector("audio#drums"),
+    track: "./mus/drums.ogg",
+    node: void 0,
+    gain: new GainNode(actx),
     cond(state) {
       return 0;
     }
   },
   {
-    el: document.querySelector("audio#lead"),
+    track: "./mus/lead.ogg",
+    node: void 0,
+    gain: new GainNode(actx),
     cond(state) {
       return state.gameStarted ? 1 : 0;
     }
   }
 ];
+(async () => {
+  console.log("Setting up audio...");
+  const trackPromises = tracks.map(async (track) => (async () => {
+    console.log(`Fetching ${track.track}...`);
+    const audioBuf = await fetch(track.track).then(async (response) => response.arrayBuffer());
+    console.log(`Got audio data for ${track.track}, ${audioBuf.byteLength} bytes`);
+    const audioData = await actx.decodeAudioData(audioBuf);
+    track.node = new AudioBufferSourceNode(actx, {
+      buffer: audioData,
+      loop: true
+    });
+    track.node.connect(track.gain);
+    track.gain.connect(actx.destination);
+  })());
+  console.log(trackPromises);
+  await Promise.all(trackPromises);
+  console.log("Done setting up audio! Starting...");
+  for (const track of tracks) {
+    track.node.start();
+  }
+})();
 export default function music(gameState) {
-  const time = tracks[0].el.currentTime;
   for (const track of tracks) {
     const tgt = gameState.settings.music ? track.cond(gameState) : 0;
-    track.el.volume = (track.el.volume + tgt) / 2;
-    if (Math.abs(track.el.currentTime - tracks[0].el.currentTime) > 0.2) {
-      track.el.fastSeek(tracks[0].el.currentTime);
-    }
+    track.gain.gain.value = (track.gain.gain.value + tgt) / 2;
   }
   window.setTimeout(music, 100, gameState);
 }
