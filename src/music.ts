@@ -14,9 +14,9 @@ for (const event of eventsToStartAudio) {
 }
 
 // `el` stores the track's element, `cond` returns its target volume from 0-1.
-const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gain: GainNode; cond: (s: GameState) => number}> = [
+const tracks: Array<{location: string; node: AudioBufferSourceNode | undefined; gain: GainNode; cond: (s: GameState) => number}> = [
 	{
-		track: './mus/synth.ogg',
+		location: './mus/synth.ogg',
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
@@ -24,7 +24,7 @@ const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gai
 		},
 	},
 	{
-		track: './mus/bass.ogg',
+		location: './mus/bass.ogg',
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
@@ -32,7 +32,7 @@ const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gai
 		},
 	},
 	{
-		track: './mus/drums.ogg',
+		location: './mus/drums.ogg',
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
@@ -40,7 +40,7 @@ const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gai
 		},
 	},
 	{
-		track: './mus/lead.ogg',
+		location: './mus/lead.ogg',
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
@@ -53,9 +53,9 @@ const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gai
 	await actx.suspend();
 	console.log('Setting up audio...');
 	const trackPromises = tracks.map(async track => (async () => {
-		console.log(`Fetching ${track.track}...`);
-		const audioBuf = await fetch(track.track).then(async response => response.arrayBuffer());
-		console.log(`Got audio data for ${track.track}, ${audioBuf.byteLength} bytes`);
+		console.log(`Fetching ${track.location}...`);
+		const audioBuf = await fetch(track.location).then(async response => response.arrayBuffer());
+		console.log(`Got audio data for ${track.location}, ${audioBuf.byteLength} bytes`);
 		const audioData = await actx.decodeAudioData(audioBuf);
 		track.node = new AudioBufferSourceNode(actx, {
 			buffer: audioData,
