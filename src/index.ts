@@ -1,4 +1,6 @@
 import {background} from './background.js';
+import type {Fruit} from './fruit.js';
+import fruit from './fruit.js';
 import grid, {cellPositionHelper, cellSizeHelper} from './grid.js';
 import hud from './hud.js';
 import type {Player} from './input.js';
@@ -25,6 +27,8 @@ export type GameState = {
 	// Whether the game has started.
 	// If this is false, we're in the menu.
 	gameStarted: boolean;
+	// The list of all fruits
+	fruits: Fruit[];
 };
 
 // The time of the last tick.
@@ -41,6 +45,8 @@ const gameState: GameState = {
 	// The game starts on the menu.
 	// TODO: Rewrite this as an enum for extra "dead" or "victory" states.
 	gameStarted: false,
+	// The game starts with no fruits.
+	fruits: [],
 };
 
 // A persistent reference to the game's canvas element.
@@ -84,6 +90,9 @@ function tick() {
 	if (gameState.gameStarted) {
 		// Tick snakes
 		snake(ctx, gameState, delta);
+		// Uncomment to enable Willow's fruit implementation
+		// // Tick fruits
+		// fruit(gameState, ctx);
 	} else {
 		// Draw the pre-game menu
 		menu(ctx, gameState);
