@@ -2,6 +2,17 @@ import type {GameState} from 'src';
 
 const actx = new AudioContext();
 
+const eventsToStartAudio = [
+	'keydown',
+	'click',
+];
+
+for (const event of eventsToStartAudio) {
+	document.addEventListener(event, async () => {
+		await actx.resume();
+	});
+}
+
 // `el` stores the track's element, `cond` returns its target volume from 0-1.
 const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gain: GainNode; cond: (s: GameState) => number}> = [
 	{
@@ -39,6 +50,7 @@ const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gai
 ];
 
 (async () => {
+	await actx.suspend();
 	console.log('Setting up audio...');
 	const trackPromises = tracks.map(async track => (async () => {
 		console.log(`Fetching ${track.track}...`);
@@ -58,6 +70,8 @@ const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gai
 	for (const track of tracks) {
 		track.node.start();
 	}
+
+	await actx.resume();
 })();
 
 // Tick the music 10 times per second.
