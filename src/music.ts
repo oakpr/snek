@@ -1,46 +1,70 @@
 import type {GameState} from 'src';
 
+const actx = new AudioContext();
+
 // `el` stores the track's element, `cond` returns its target volume from 0-1.
-const tracks: Array<{el: HTMLAudioElement; cond: (s: GameState) => number}> = [
+const tracks: Array<{track: string; node: AudioBufferSourceNode | undefined; gain: GainNode; cond: (s: GameState) => number}> = [
 	{
-		el: document.querySelector('audio#synth'),
+		track: './mus/synth.ogg',
+		node: undefined,
+		gain: new GainNode(actx),
 		cond(state: GameState) {
 			return state.gameStarted ? 1 : 0.5;
 		},
 	},
 	{
-		el: document.querySelector('audio#bass'),
+		track: './mus/bass.ogg',
+		node: undefined,
+		gain: new GainNode(actx),
 		cond(state: GameState) {
-			return state.gameStarted ? 0.4 : 0;
+			return state.gameStarted ? 1 : 0;
 		},
 	},
 	{
-		el: document.querySelector('audio#drums'),
+		track: './mus/drums.ogg',
+		node: undefined,
+		gain: new GainNode(actx),
 		cond(state: GameState) {
 			return 0;
 		},
 	},
 	{
-		el: document.querySelector('audio#lead'),
+		track: './mus/lead.ogg',
+		node: undefined,
+		gain: new GainNode(actx),
 		cond(state: GameState) {
 			return state.gameStarted ? 1 : 0;
 		},
 	},
 ];
 
-// For (const track of tracks) {
-// 	void track.el.play();
-// }
+(async () => {
+	console.log('Setting up audio...');
+	const trackPromises = tracks.map(async track => (async () => {
+		console.log(`Fetching ${track.track}...`);
+		const audioBuf = await fetch(track.track).then(async response => response.arrayBuffer());
+		console.log(`Got audio data for ${track.track}, ${audioBuf.byteLength} bytes`);
+		const audioData = await actx.decodeAudioData(audioBuf);
+		track.node = new AudioBufferSourceNode(actx, {
+			buffer: audioData,
+			loop: true,
+		});
+		track.node.connect(track.gain);
+		track.gain.connect(actx.destination);
+	})());
+	console.log(trackPromises);
+	await Promise.all(trackPromises);
+	console.log('Done setting up audio! Starting...');
+	for (const track of tracks) {
+		track.node.start();
+	}
+})();
 
 // Tick the music 10 times per second.
 export default function music(gameState: GameState) {
-	const time = tracks[0].el.currentTime;
 	for (const track of tracks) {
 		const tgt = gameState.settings.music ? track.cond(gameState) : 0;
-		track.el.volume = (track.el.volume + tgt) / 2;
-		if (Math.abs(track.el.currentTime - tracks[0].el.currentTime) > 0.2) {
-			track.el.fastSeek(tracks[0].el.currentTime);
-		}
+		track.gain.gain.value = (track.gain.gain.value + tgt) / 2;
 	}
 
 	window.setTimeout(music, 100, gameState);
