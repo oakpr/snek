@@ -6,7 +6,9 @@ export const defaultSettings = {
   testDisplay: false,
   waitForFrame: true,
   showFrameRate: false,
-  music: true
+  music: true,
+  autoMode: false,
+  fast: false
 };
 const options = [
   ["snek menu"],
@@ -18,6 +20,8 @@ const options = [
   ["frame limit?", "waitForFrame", [true, false]],
   ["frame display?", "showFrameRate", [false, true]],
   ["music?", "music", [true, false]],
+  ["demo?", "autoMode", [false, true]],
+  ["fast?", "fast", [false, true]],
   ["press a to start"]
 ];
 let cursorPos = 1;

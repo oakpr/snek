@@ -1,4 +1,5 @@
-import {cellSizeHelper, cellPositionHelper} from "./grid.js";
+import {cellSizeHelper, cellPositionHelper, interPos, distance, addPos} from "./grid.js";
+import auto from "./demo.js";
 export default function snake(ctx, gameState, delta) {
   for (const player of gameState.players) {
     if (player === void 0) {
@@ -7,7 +8,7 @@ export default function snake(ctx, gameState, delta) {
     player.snake.tick(gameState, ctx, delta);
   }
 }
-var Facing;
+export var Facing;
 (function(Facing2) {
   Facing2[Facing2["Uninit"] = 0] = "Uninit";
   Facing2[Facing2["Up"] = 1] = "Up";
@@ -26,7 +27,7 @@ export class Snake {
     this.timer = 0;
   }
   speed() {
-    return 1e3 / this.len;
+    return 1e3 / Math.sqrt(2 * this.len);
   }
   tick(gameState, ctx, delta) {
     if (this.facing === 0) {
@@ -48,6 +49,7 @@ export class Snake {
     const x = player.movement[0];
     const y = player.movement[1];
     let f = this.facing;
+    const oldF = this.facing;
     if (x > 0) {
       f = 2;
     }
@@ -85,10 +87,16 @@ export class Snake {
     if (f !== badDirection) {
       this.facing = f;
     }
+    if (player.buttonsDirty[0] || gameState.settings.fast) {
+      this.timer = this.speed();
+    }
     this.timer += delta;
     if (this.timer > this.speed()) {
-      this.move(gameState);
+      if (gameState.settings.autoMode) {
+        this.facing = auto([gameState.settings.gridWidth, gameState.settings.gridHeight], this.tail[0], oldF);
+      }
       this.timer = 0;
+      this.move(gameState);
     }
     ctx.strokeStyle = "white";
     const w = cellSizeHelper(ctx, gameState);
@@ -185,14 +193,7 @@ export class Snake {
       this.tail.pop();
     }
   }
-}
-function addPos(a, b) {
-  return [a[0] + b[0], a[1] + b[1]];
-}
-function interPos(a, b, c) {
-  const delta = [(b[0] - a[0]) * c, (b[1] - a[1]) * c];
-  return addPos(a, delta);
-}
-function distance(a, b) {
-  return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+  intersects(p) {
+    return false;
+  }
 }

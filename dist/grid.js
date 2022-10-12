@@ -54,3 +54,16 @@ export function cellPositionHelper(ctx, gameState, position, cellSizeInput) {
     top + cellSize * (position[1] + 0.5)
   ];
 }
+export function posCompare(a, b) {
+  return a[0] === b[0] && a[1] === b[1];
+}
+export function addPos(a, b) {
+  return [a[0] + b[0], a[1] + b[1]];
+}
+export function interPos(a, b, c) {
+  const delta = [(b[0] - a[0]) * c, (b[1] - a[1]) * c];
+  return addPos(a, delta);
+}
+export function distance(a, b) {
+  return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
+}

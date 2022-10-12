@@ -11,7 +11,8 @@ const gameState = {
   clock: 0,
   score: 0,
   settings: defaultSettings,
-  gameStarted: false
+  gameStarted: false,
+  fruits: []
 };
 const canvas = document.querySelector("#viewport");
 const ctx = canvas.getContext("2d");
