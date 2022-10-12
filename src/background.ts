@@ -21,18 +21,30 @@ const fsSource = `
 	uniform highp float timer;
 
 	void main() {
+		lowp float t = timer;
+
 		// Initialize the internal coordinates to match the fragment coordinates.
 		highp float y = gl_FragCoord.y;
 		highp float x = gl_FragCoord.x;
-		// Offset the internal coordinates by some wacky trig functions.
-		y += (sin(((x / 10.0) + (timer * 3.0)) * (10.0 + sin(timer)) / 10.0)) * 3.0 + (timer * 30.0);
-		x -= sin((y / 20.0) + (timer / 5.0) + (sin(y/5.0))) * 500.0;
-		// Offset the timer as a function of the internal coordinates.
-		highp float offset_timer = (timer / 5.0) + (sin(y/5.0) + (timer / -0.5) / 5.0) + (cos(x / 5.0) + (timer / 10.0)) / 15.0;
-		// Calculate the rgb values by treating the offset timer as a hue sort of thing.
-		lowp float r = 0.5 + (0.5 * sin(offset_timer));
-		lowp float g = 0.5 + (0.5 * sin(offset_timer + (2.0 * 3.14 / 3.0)));
-		lowp float b = 0.5 + (0.5 * sin(offset_timer + (4.0 * 3.14 / 3.0)));
+
+		x += sin((y / 20.0) + timer) * 50.0 + cos(y - timer / 2.0) * 2.0 + cos(x / sin(timer * cos(y + timer)));
+
+		lowp float hue1 = timer + sin((x + y + timer) / 10.0);
+		lowp float hue2 = timer + cos((x - y) / 10.0);
+
+		bool row = mod(y * 240.0, 2.0) < 0.5;
+		lowp float r = 0.0;
+		lowp float g = 0.0;
+		lowp float b = 0.0;
+		if (row) {
+			r = 0.5 + (0.5 * sin(hue1));
+			g = 0.5 + (0.5 * sin(hue1 + (2.0 * 3.14 / 3.0)));
+			b = 0.5 + (0.5 * sin(hue1 + (4.0 * 3.14 / 3.0)));
+		} else {
+			r = 0.5 + (0.5 * sin(hue2));
+			g = 0.5 + (0.5 * sin(hue2 + (2.0 * 3.14 / 3.0)));
+			b = 0.5 + (0.5 * sin(hue2 + (4.0 * 3.14 / 3.0)));
+		}
 		// Write the rgb color to the screen.
 		gl_FragColor = vec4(r, g, b, 1.0);
 	}
