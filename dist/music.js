@@ -1,4 +1,13 @@
 const actx = new AudioContext();
+const eventsToStartAudio = [
+  "keydown",
+  "click"
+];
+for (const event of eventsToStartAudio) {
+  document.addEventListener(event, async () => {
+    await actx.resume();
+  });
+}
 const tracks = [
   {
     track: "./mus/synth.ogg",
@@ -34,6 +43,7 @@ const tracks = [
   }
 ];
 (async () => {
+  await actx.suspend();
   console.log("Setting up audio...");
   const trackPromises = tracks.map(async (track) => (async () => {
     console.log(`Fetching ${track.track}...`);
@@ -53,6 +63,7 @@ const tracks = [
   for (const track of tracks) {
     track.node.start();
   }
+  await actx.resume();
 })();
 export default function music(gameState) {
   for (const track of tracks) {
