@@ -17,6 +17,10 @@ export type Settings = {
 	showFrameRate: boolean;
 	// Whether to enable dynamic music
 	music: boolean;
+	// Whether to play automatically
+	autoMode: boolean;
+	// Whether to move as fast as possible
+	fast: boolean;
 };
 export const defaultSettings = {
 	enableBg: true,
@@ -27,6 +31,8 @@ export const defaultSettings = {
 	waitForFrame: true,
 	showFrameRate: false,
 	music: true,
+	autoMode: false,
+	fast: false,
 };
 
 // The list of options to display in the menu.
@@ -43,6 +49,8 @@ const options: Array<[string, string, any[]] | [string]> = [
 	['frame limit?', 'waitForFrame', [true, false]],
 	['frame display?', 'showFrameRate', [false, true]],
 	['music?', 'music', [true, false]],
+	['demo?', 'autoMode', [false, true]],
+	['fast?', 'fast', [false, true]],
 	['press a to start'],
 ];
 

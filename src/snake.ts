@@ -1,5 +1,6 @@
 import type {GameState} from 'src';
 import {cellSizeHelper, cellPositionHelper} from './grid.js';
+import auto from './demo.js';
 
 // Tick all of the players' snakes.
 export default function snake(ctx: CanvasRenderingContext2D, gameState: GameState, delta: number) {
@@ -14,7 +15,7 @@ export default function snake(ctx: CanvasRenderingContext2D, gameState: GameStat
 }
 
 // The facing direction of the snake. `Uninit` means the snake should be initialized next frame.
-enum Facing {
+export enum Facing {
 	Uninit,
 	Up,
 	Right,
@@ -83,6 +84,7 @@ export class Snake {
 
 		// Write the snake's facing angle.
 		let f = this.facing;
+		const oldF = this.facing;
 		if (x > 0) {
 			f = Facing.Right;
 		}
@@ -132,17 +134,23 @@ export class Snake {
 			this.facing = f;
 		}
 
+		// If the player is mashing A, move immediately
+		if (player.buttonsDirty[0] || gameState.settings.fast) {
+			this.timer = this.speed();
+		}
+
 		// Tick the movement timer.
 		this.timer += delta;
 		if (this.timer > this.speed()) {
+			// Overwrite the snake's facing angle if we're in auto mode
+			if (gameState.settings.autoMode) {
+				this.facing = auto([gameState.settings.gridWidth, gameState.settings.gridHeight], this.tail[0], oldF);
+			}
+
+			this.timer = 0;
+
 			// If the timer is complete, move and reset it.
 			this.move(gameState);
-			this.timer = 0;
-		}
-
-		// If the player is mashing A, move immediately
-		if (player.buttonsDirty[0]) {
-			this.timer = this.speed();
 		}
 
 		// Draw the snake
@@ -273,3 +281,4 @@ function interPos(a: [number, number], b: [number, number], c: number) {
 function distance(a: [number, number], b: [number, number]): number {
 	return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]);
 }
+
