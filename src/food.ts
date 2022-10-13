@@ -1,5 +1,5 @@
 import type {GameState} from 'src';
-import { cellPositionHelper, cellSizeHelper } from './grid';
+import { cellPositionHelper, cellSizeHelper } from './grid.js';
 
 // Randomly populates fruit
 let food: [number, number] | undefined;
