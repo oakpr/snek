@@ -1,3 +1,4 @@
+import {cellPositionHelper, cellSizeHelper} from "./grid.js";
 let food;
 const expansionRate = 1;
 export function update(gameState) {
@@ -12,6 +13,15 @@ export function update(gameState) {
   }
 }
 export function draw(gameState, ctx) {
+  const scrPos = cellPositionHelper(ctx, gameState, this.position, cellSizeHelper(ctx, gameState));
+  ctx.beginPath();
+  ctx.moveTo(scrPos[0] - 10, scrPos[1]);
+  ctx.lineTo(scrPos[0], scrPos[1] - 10);
+  ctx.lineTo(scrPos[0] + 10, scrPos[1]);
+  ctx.lineTo(scrPos[0], scrPos[1] + 10);
+  ctx.lineTo(scrPos[0] - 10, scrPos[1]);
+  ctx.fillStyle = "white";
+  ctx.fill();
 }
 function getRandomFoodPosition(gameState) {
   return [0, 0];
