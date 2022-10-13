@@ -270,7 +270,12 @@ export class Snake {
 
 	// Check whether the snake intersects a given tile.
 	intersects(p: [number, number]): boolean {
-		// TODO
+		// if (snake.tail.some(segment => posCompare(segment, p)){
+		// 	return true
+		// }
+
+
+		
 		return false;
 	}
 }

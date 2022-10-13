@@ -1,4 +1,5 @@
 import type {GameState} from 'src';
+import { cellPositionHelper, cellSizeHelper } from './grid';
 
 // Randomly populates fruit
 let food: [number, number] | undefined;
@@ -21,10 +22,20 @@ export function update(gameState: GameState) {
 }
 
 export function draw(gameState: GameState, ctx: CanvasRenderingContext2D) {
-	// Rewrite this to support multiple fruits and draw on the canvas.
+	const scrPos = cellPositionHelper(ctx, gameState, this.position, cellSizeHelper(ctx, gameState));
+		ctx.beginPath();
+		ctx.moveTo(scrPos[0] - 10, scrPos[1]);
+		ctx.lineTo(scrPos[0], scrPos[1] - 10);
+		ctx.lineTo(scrPos[0] + 10, scrPos[1]);
+		ctx.lineTo(scrPos[0], scrPos[1] + 10);
+		ctx.lineTo(scrPos[0] - 10, scrPos[1]);
+		ctx.fillStyle = 'white';
+		ctx.fill();
 }
 
 function getRandomFoodPosition(gameState: GameState): [number, number] {
 	// Rewrite to read our grid settings and use the snake.intersects method
+	
+
 	return [0, 0];
 }
