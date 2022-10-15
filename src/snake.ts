@@ -1,5 +1,5 @@
 import type {GameState} from 'src';
-import {cellSizeHelper, cellPositionHelper, interPos, distance, addPos} from './grid.js';
+import {cellSizeHelper, cellPositionHelper, interPos, distance, addPos, posCompare} from './grid.js';
 import auto from './demo.js';
 
 // Tick all of the players' snakes.
@@ -284,12 +284,10 @@ export class Snake {
 
 	// Check whether the snake intersects a given tile.
 	intersects(p: [number, number]): boolean {
-		// if (snake.tail.some(segment => posCompare(segment, p)){
-		// 	return true
-		// }
+		if (this.tail.some(segment => posCompare(segment, p))) {
+			return true;
+		}
 
-
-		
 		return false;
 	}
 
