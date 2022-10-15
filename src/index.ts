@@ -1,5 +1,5 @@
 import {background} from './background.js';
-import type {Fruit} from './fruit.js';
+import type {Fruit} from './fruits/base.js';
 import fruit from './fruit.js';
 import grid, {cellPositionHelper, cellSizeHelper} from './grid.js';
 import hud from './hud.js';

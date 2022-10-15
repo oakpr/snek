@@ -1,7 +1,8 @@
-import type {GameState} from 'src';
-import {Fruit} from 'src/fruit';
-import {cellPositionHelper, cellSizeHelper} from 'src/grid';
-import type {Snake} from 'src/snake';
+import {cellPositionHelper, cellSizeHelper} from '../grid.js';
+import type {Snake} from '../snake';
+import type {GameState} from '../index';
+import {Fruit} from './base.js';
+import type {FruitOutput} from './base';
 
 export class BasicFruit extends Fruit {
 	static roll(gameState: GameState): boolean {
@@ -22,13 +23,23 @@ export class BasicFruit extends Fruit {
 		this.position = position;
 	}
 
-	check(gameState: GameState, snake: Snake): [number, number, boolean] {
+	check(gameState: GameState, snake: Snake): FruitOutput {
 		const head = snake.tail[0];
 		if (head[0] === this.position[0] && head[1] === this.position[1]) {
-			return [1, 1, true];
+			return {
+				scoreDelta: 1,
+				lenDelta: 1,
+				disappear: true,
+				snake: undefined,
+			};
 		}
 
-		return [0, 0, false];
+		return {
+			scoreDelta: 0,
+			lenDelta: 0,
+			disappear: false,
+			snake: undefined,
+		};
 	}
 
 	draw(gameState: GameState, ctx: CanvasRenderingContext2D): void {
