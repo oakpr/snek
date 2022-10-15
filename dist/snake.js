@@ -1,4 +1,4 @@
-import {cellSizeHelper, cellPositionHelper, interPos, distance, addPos} from "./grid.js";
+import {cellSizeHelper, cellPositionHelper, interPos, distance, addPos, posCompare} from "./grid.js";
 import auto from "./demo.js";
 export default function snake(ctx, gameState, delta) {
   for (const player of gameState.players) {
@@ -25,9 +25,12 @@ export class Snake {
     this.dying = false;
     this.player = player;
     this.timer = 0;
+    this.combo = 0;
+    this.colorTimer = 0;
+    this.thickness = 0.8;
   }
   speed() {
-    return 1e3 / Math.sqrt(2 * this.len);
+    return 1e3 / (Math.sqrt(2 * (this.combo + 0.5)) + Math.sqrt(this.len / 2));
   }
   tick(gameState, ctx, delta) {
     if (this.facing === 0) {
@@ -45,6 +48,9 @@ export class Snake {
       this.lastFacing = this.facing;
       this.tail.push([x2, y2]);
     }
+    this.combo -= delta / 1e3;
+    this.combo = Math.max(this.combo, 0);
+    this.thickness = (this.thickness * 2 + 0.8) / 3;
     const player = gameState.players.find((v) => v.controllerId === this.player);
     const x = player.movement[0];
     const y = player.movement[1];
@@ -98,9 +104,10 @@ export class Snake {
       this.timer = 0;
       this.move(gameState);
     }
-    ctx.strokeStyle = "white";
+    const color = this.color(delta / 1e3);
+    ctx.strokeStyle = `hsl(${color.join(",")})`;
     const w = cellSizeHelper(ctx, gameState);
-    ctx.lineWidth = w * 0.8;
+    ctx.lineWidth = w * 0.8 * this.thickness;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.beginPath();
@@ -194,6 +201,18 @@ export class Snake {
     }
   }
   intersects(p) {
+    if (this.tail.some((segment) => posCompare(segment, p))) {
+      return true;
+    }
     return false;
+  }
+  color(delta) {
+    const fac = Math.sqrt(this.combo);
+    this.colorTimer += delta * fac;
+    const hue = this.colorTimer * 30 % 360;
+    const colorness = Math.min(fac, 1);
+    const sat = colorness * 100;
+    const value = (1 - (colorness / 2) ** 2) * 100;
+    return [hue, `${sat}%`, `${value}%`];
   }
 }

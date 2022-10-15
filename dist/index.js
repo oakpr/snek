@@ -1,4 +1,5 @@
 import {background} from "./background.js";
+import fruit from "./fruit.js";
 import grid, {cellPositionHelper, cellSizeHelper} from "./grid.js";
 import hud from "./hud.js";
 import * as input from "./input.js";
@@ -33,6 +34,7 @@ function tick() {
   grid(ctx, gameState);
   if (gameState.gameStarted) {
     snake(ctx, gameState, delta);
+    fruit(gameState, ctx);
   } else {
     menu(ctx, gameState);
   }
