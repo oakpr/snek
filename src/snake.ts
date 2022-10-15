@@ -84,7 +84,7 @@ export class Snake {
 		}
 
 		// Tick down the combo
-		this.combo -= delta / 1000;
+		this.combo -= delta / 3000;
 		this.combo = Math.max(this.combo, 0);
 
 		// Interpolate thickness
