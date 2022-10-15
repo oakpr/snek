@@ -17,15 +17,14 @@ export class Fruit {
 		// Does nothing, since this is just a marker class.
 	}
 
-	// Returns whether the fruit should disappear.
-	tick(gameState: GameState): boolean {
+	// Passes through the return value from check, or a sensible default.
+	tick(gameState: GameState): [number, number, boolean, Snake] | false {
 		for (const snake of gameState.players.map(p => p.snake)) {
 			if (snake.timer === 0) {
 				// If a snake's timer is zero, it moved this frame!!!
-				const result = this.check(gameState, snake);
-				snake.score += result[0];
-				snake.len += result[1];
-				return result[2];
+				const result: any[] = this.check(gameState, snake);
+				result.push(snake);
+				return result as [number, number, boolean, Snake];
 			}
 		}
 
@@ -48,7 +47,8 @@ export class Fruit {
 
 export class BasicFruit extends Fruit {
 	static roll(gameState: GameState): boolean {
-		return gameState.fruits.findIndex(v => v instanceof BasicFruit) === -1;
+		const counter = gameState.fruits.filter(v => v instanceof BasicFruit).length;
+		return counter < 30;
 	}
 
 	static spawn(gameState: GameState) {
@@ -90,7 +90,18 @@ export const fruitKinds = [BasicFruit];
 
 export default function fruit(gameState: GameState, ctx: CanvasRenderingContext2D) {
 	for (let i = gameState.fruits.length - 1; i >= 0; i--) {
-		if (gameState.fruits[i].tick(gameState)) {
+		const result = gameState.fruits[i].tick(gameState);
+		if (!result) {
+			continue;
+		}
+
+		const [scoreDelta, lengthDelta, disappear, snake] = result;
+		gameState.fruits[i].tick(gameState);
+		snake.score += scoreDelta * Math.max(1, snake.combo);
+		snake.combo += scoreDelta / 2;
+		snake.len += lengthDelta;
+		snake.thickness += scoreDelta > 0 ? 0.2 : 0;
+		if (disappear) {
 			gameState.fruits.splice(i, 1);
 		}
 	}

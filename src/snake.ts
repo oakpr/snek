@@ -32,6 +32,9 @@ export class Snake {
 	dying: boolean;
 	timer: number;
 	player: number;
+	combo: number;
+	colorTimer: number;
+	thickness: number;
 
 	constructor(player: number) {
 		// Set the tail to an empty array so it is initialized next frame
@@ -43,12 +46,15 @@ export class Snake {
 		this.dying = false;
 		this.player = player;
 		this.timer = 0;
+		this.combo = 0;
+		this.colorTimer = 0;
+		this.thickness = 0.8;
 	}
 
-	// Return the snake's speed as a number of seconds per cell.
+	// Return the snake's speed as a number of milliseconds per cell.
 	speed() {
 		// Placeholder thing
-		return 1000 / Math.sqrt(2 * this.len);
+		return 1000 / (Math.sqrt(2 * (this.combo + 0.5)) + Math.sqrt(this.len / 2));
 	}
 
 	// Tick the snake. Increase the timer by delta. If its timer exceeds speed(), reset it to zero and move().
@@ -76,6 +82,13 @@ export class Snake {
 			this.lastFacing = this.facing;
 			this.tail.push([x, y]);
 		}
+
+		// Tick down the combo
+		this.combo -= delta / 1000;
+		this.combo = Math.max(this.combo, 0);
+
+		// Interpolate thickness
+		this.thickness = ((this.thickness * 2) + 0.8) / 3;
 
 		// Get the associated player for this snake.
 		const player = gameState.players.find(v => v.controllerId === this.player);
@@ -154,9 +167,10 @@ export class Snake {
 		}
 
 		// Draw the snake
-		ctx.strokeStyle = 'white';
+		const color = this.color(delta / 1000);
+		ctx.strokeStyle = `hsl(${color.join(',')})`;
 		const w = cellSizeHelper(ctx, gameState);
-		ctx.lineWidth = w * 0.8;
+		ctx.lineWidth = w * 0.8 * this.thickness;
 		ctx.lineJoin = 'round';
 		ctx.lineCap = 'round';
 		ctx.beginPath();
@@ -272,6 +286,17 @@ export class Snake {
 	intersects(p: [number, number]): boolean {
 		// TODO
 		return false;
+	}
+
+	// Generate the snake's color as HSL, given the time and our combo.
+	color(delta: number): [number, string, string] {
+		const fac = Math.sqrt(this.combo);
+		this.colorTimer += delta * fac;
+		const hue = (this.colorTimer * 30) % 360;
+		const colorness = Math.min(fac, 1);
+		const sat = colorness * 100;
+		const value = (1 - ((colorness / 2) ** 2)) * 100;
+		return [hue, `${sat}%`, `${value}%`];
 	}
 }
 

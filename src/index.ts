@@ -90,9 +90,8 @@ function tick() {
 	if (gameState.gameStarted) {
 		// Tick snakes
 		snake(ctx, gameState, delta);
-		// Uncomment to enable Willow's fruit implementation
-		// // Tick fruits
-		// fruit(gameState, ctx);
+		// Tick fruits
+		fruit(gameState, ctx);
 	} else {
 		// Draw the pre-game menu
 		menu(ctx, gameState);
