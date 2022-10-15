@@ -48,7 +48,7 @@ export class Fruit {
 export class BasicFruit extends Fruit {
 	static roll(gameState: GameState): boolean {
 		const counter = gameState.fruits.filter(v => v instanceof BasicFruit).length;
-		return counter < 30;
+		return counter < 2;
 	}
 
 	static spawn(gameState: GameState) {
