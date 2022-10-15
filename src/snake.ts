@@ -177,7 +177,8 @@ export class Snake {
 		if (this.tail.length > 1) {
 			const headPos = cellPositionHelper(ctx, gameState, this.tail[0], w);
 			let nextPos = cellPositionHelper(ctx, gameState, this.tail[1], w);
-			const animHeadPos = interPos(nextPos, headPos, this.timer / this.speed());
+			const interp = (this.timer / this.speed()) ** (1 / 2);
+			const animHeadPos = interPos(nextPos, headPos, interp);
 			ctx.moveTo(animHeadPos[0], animHeadPos[1]);
 			if (distance(this.tail[1], this.tail[0]) === 1) {
 				ctx.lineTo(animHeadPos[0], animHeadPos[1]);
@@ -207,7 +208,7 @@ export class Snake {
 					ctx.lineTo(nextPos[0], nextPos[1]);
 					ctx.lineTo(tailPos[0], tailPos[1]);
 				} else {
-					const animTailPos = interPos(tailPos, nextPos, this.timer / this.speed());
+					const animTailPos = interPos(tailPos, nextPos, interp);
 					ctx.lineTo(nextPos[0], nextPos[1]);
 					ctx.lineTo(animTailPos[0], animTailPos[1]);
 				}
