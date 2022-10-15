@@ -24,7 +24,7 @@ export class Fruit {
 export class BasicFruit extends Fruit {
   static roll(gameState) {
     const counter = gameState.fruits.filter((v) => v instanceof BasicFruit).length;
-    return counter < 30;
+    return counter < 2;
   }
   static spawn(gameState) {
     const x = Math.floor(Math.random() * gameState.settings.gridWidth);

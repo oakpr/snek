@@ -48,7 +48,7 @@ export class Snake {
       this.lastFacing = this.facing;
       this.tail.push([x2, y2]);
     }
-    this.combo -= delta / 1e3;
+    this.combo -= delta / 3e3;
     this.combo = Math.max(this.combo, 0);
     this.thickness = (this.thickness * 2 + 0.8) / 3;
     const player = gameState.players.find((v) => v.controllerId === this.player);
