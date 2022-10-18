@@ -167,10 +167,10 @@ export class Snake {
 		}
 
 		// Draw the snake
-		const color = this.color(delta / 1000);
+		const color = this.color(delta / 1000, gameState);
 		ctx.strokeStyle = `hsl(${color.join(',')})`;
 		const w = cellSizeHelper(ctx, gameState);
-		ctx.lineWidth = w * 0.8 * this.thickness;
+		ctx.lineWidth = gameState.settings.flashy ? w * 0.8 * this.thickness : w * 0.7;
 		ctx.lineJoin = 'round';
 		ctx.lineCap = 'round';
 		ctx.beginPath();
@@ -293,12 +293,12 @@ export class Snake {
 	}
 
 	// Generate the snake's color as HSL, given the time and our combo.
-	color(delta: number): [number, string, string] {
+	color(delta: number, gameState: GameState): [number, string, string] {
 		const fac = Math.sqrt(this.combo);
 		this.colorTimer += delta * fac;
 		const hue = (this.colorTimer * 30) % 360;
 		const colorness = Math.min(fac, 1);
-		const sat = colorness * 100;
+		const sat = gameState.settings.flashy ? colorness * 100 : 0;
 		const value = (1 - ((colorness / 2) ** 2)) * 100;
 		return [hue, `${sat}%`, `${value}%`];
 	}

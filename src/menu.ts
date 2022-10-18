@@ -1,9 +1,10 @@
 import type {GameState} from 'src';
+import {GameMode} from './game-mode.js';
 
 // The types of all settings values.
 export type Settings = {
 	// Whether to draw the background.
-	enableBg: boolean;
+	flashy: boolean;
 	// Whether the snake will wrap when hitting the edge instead of dying.
 	wrap: boolean;
 	// The dimensions of the grid.
@@ -23,7 +24,7 @@ export type Settings = {
 	fast: boolean;
 };
 export const defaultSettings = {
-	enableBg: true,
+	flashy: true,
 	wrap: false,
 	gridWidth: 10,
 	gridHeight: 10,
@@ -41,7 +42,7 @@ export const defaultSettings = {
 // the second is the setting key, and the third are the possible values.
 const options: Array<[string, string, any[]] | [string]> = [
 	['snek menu'],
-	['enable bg?', 'enableBg', [true, false]],
+	['flashy?', 'flashy', [true, false]],
 	['wrap?', 'wrap', [true, false]],
 	['width?', 'gridWidth', [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
 	['height?', 'gridHeight', [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
@@ -62,6 +63,7 @@ let suppressY = false;
 let suppressX = false;
 
 // Draw the menu.
+// eslint-disable-next-line complexity
 export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState) {
 	// Draw the background.
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -135,7 +137,7 @@ export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState
 	}
 
 	// If the player's button is pressed, advance to the game
-	if (gameState.players[0]?.buttons[0]) {
-		gameState.gameStarted = true;
+	if (gameState.players[0]?.buttons[0] && gameState.players[0]?.buttonsDirty[0]) {
+		gameState.gameMode = GameMode.Game;
 	}
 }

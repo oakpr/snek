@@ -10,6 +10,8 @@ import menu, {defaultSettings} from './menu.js';
 import music from './music.js';
 import type {Snake} from './snake.js';
 import snake from './snake.js';
+import {GameMode} from './game-mode.js';
+import warning from './warning.js';
 
 // The entire state of the game.
 // Game steps should not store their state internally; that is bad practice.
@@ -26,7 +28,7 @@ export type GameState = {
 	settings: Settings;
 	// Whether the game has started.
 	// If this is false, we're in the menu.
-	gameStarted: boolean;
+	gameMode: GameMode;
 	// The list of all fruits
 	fruits: Fruit[];
 };
@@ -42,9 +44,8 @@ const gameState: GameState = {
 	score: 0,
 	// Sets default settings as defined in menu.ts
 	settings: defaultSettings,
-	// The game starts on the menu.
-	// TODO: Rewrite this as an enum for extra "dead" or "victory" states.
-	gameStarted: false,
+	// The game starts on the warning screen.
+	gameMode: GameMode.Warning,
 	// The game starts with no fruits.
 	fruits: [],
 };
@@ -69,7 +70,7 @@ music(gameState);
 // The entry point for the main loop.
 function tick() {
 	// Wipe the screen, with either transparency or gray, depending on the settings.
-	if (gameState.settings.enableBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+	if (gameState.settings.flashy && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	} else {
 		ctx.fillStyle = 'rgb(32, 32, 32)';
@@ -87,14 +88,23 @@ function tick() {
 	// Draw grid
 	grid(ctx, gameState);
 
-	if (gameState.gameStarted) {
+	if (gameState.gameMode === GameMode.Game) {
 		// Tick snakes
 		snake(ctx, gameState, delta);
 		// Tick fruits
 		fruit(gameState, ctx);
 	} else {
-		// Draw the pre-game menu
-		menu(ctx, gameState);
+		switch (gameState.gameMode) {
+			case GameMode.Menu:
+				menu(ctx, gameState);
+				break;
+			case GameMode.Warning:
+				warning(ctx, gameState);
+				break;
+			default:
+				// eslint-disable-next-line no-alert
+				alert('UNIMPLEMENTED GAMEMODE');
+		}
 	}
 
 	// Draw HUD

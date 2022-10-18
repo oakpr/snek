@@ -66,7 +66,7 @@ if (bgres) {
 export function background(game_state: GameState) {
 	if (
 		// If bgctx is a WebGL context (as opposed to undefined) and...
-		bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg
+		bgctx instanceof WebGLRenderingContext && game_state.settings.flashy
 		// If the user is willing to see animations...
 		&& !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 	) {
