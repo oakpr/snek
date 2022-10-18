@@ -47,7 +47,7 @@ if (bgres) {
   [bgcanvas, bgctx, bgpi, bgbuf] = bgres;
 }
 export function background(game_state) {
-  if (bgctx instanceof WebGLRenderingContext && game_state.settings.enableBg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (bgctx instanceof WebGLRenderingContext && game_state.settings.flashy && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     renderShader(bgctx, bgpi, bgbuf, game_state.clock / 1e3);
   }
   setTimeout(() => {

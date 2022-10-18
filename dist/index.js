@@ -6,13 +6,15 @@ import * as input from "./input.js";
 import menu, {defaultSettings} from "./menu.js";
 import music from "./music.js";
 import snake from "./snake.js";
+import {GameMode} from "./game-mode.js";
+import warning from "./warning.js";
 let lastTick = Date.now();
 const gameState = {
   players: [],
   clock: 0,
   score: 0,
   settings: defaultSettings,
-  gameStarted: false,
+  gameMode: GameMode.Warning,
   fruits: []
 };
 const canvas = document.querySelector("#viewport");
@@ -21,7 +23,7 @@ const frameTimeHistory = [];
 background(gameState);
 music(gameState);
 function tick() {
-  if (gameState.settings.enableBg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (gameState.settings.flashy && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   } else {
     ctx.fillStyle = "rgb(32, 32, 32)";
@@ -32,11 +34,20 @@ function tick() {
   lastTick = Date.now();
   gameState.clock += delta;
   grid(ctx, gameState);
-  if (gameState.gameStarted) {
+  if (gameState.gameMode === GameMode.Game) {
     snake(ctx, gameState, delta);
     fruit(gameState, ctx);
   } else {
-    menu(ctx, gameState);
+    switch (gameState.gameMode) {
+      case GameMode.Menu:
+        menu(ctx, gameState);
+        break;
+      case GameMode.Warning:
+        warning(ctx, gameState);
+        break;
+      default:
+        alert("UNIMPLEMENTED GAMEMODE");
+    }
   }
   hud(gameState, delta, ctx);
   if (gameState.settings.testDisplay) {

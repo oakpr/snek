@@ -104,10 +104,10 @@ export class Snake {
       this.timer = 0;
       this.move(gameState);
     }
-    const color = this.color(delta / 1e3);
+    const color = this.color(delta / 1e3, gameState);
     ctx.strokeStyle = `hsl(${color.join(",")})`;
     const w = cellSizeHelper(ctx, gameState);
-    ctx.lineWidth = w * 0.8 * this.thickness;
+    ctx.lineWidth = gameState.settings.flashy ? w * 0.8 * this.thickness : w * 0.7;
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
     ctx.beginPath();
@@ -207,12 +207,12 @@ export class Snake {
     }
     return false;
   }
-  color(delta) {
+  color(delta, gameState) {
     const fac = Math.sqrt(this.combo);
     this.colorTimer += delta * fac;
     const hue = this.colorTimer * 30 % 360;
     const colorness = Math.min(fac, 1);
-    const sat = colorness * 100;
+    const sat = gameState.settings.flashy ? colorness * 100 : 0;
     const value = (1 - (colorness / 2) ** 2) * 100;
     return [hue, `${sat}%`, `${value}%`];
   }

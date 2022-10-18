@@ -8,7 +8,7 @@ export default function hud(game_state, _delta, ctx) {
   ctx.textBaseline = "middle";
   ctx.font = "32px Major Mono Display";
   ctx.fillText("snek", ctx.canvas.width / 2, 15);
-  if (game_state.settings.autoMode && Math.round(game_state.clock / 100) % 2 === 0) {
+  if (game_state.settings.autoMode && (Math.round(game_state.clock / 100) % 2 === 0 || !game_state.settings.flashy)) {
     ctx.textAlign = "left";
     ctx.fillText("demo", 10, 15);
   }

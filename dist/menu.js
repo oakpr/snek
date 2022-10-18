@@ -1,5 +1,6 @@
+import {GameMode} from "./game-mode.js";
 export const defaultSettings = {
-  enableBg: true,
+  flashy: true,
   wrap: false,
   gridWidth: 10,
   gridHeight: 10,
@@ -12,7 +13,7 @@ export const defaultSettings = {
 };
 const options = [
   ["snek menu"],
-  ["enable bg?", "enableBg", [true, false]],
+  ["flashy?", "flashy", [true, false]],
   ["wrap?", "wrap", [true, false]],
   ["width?", "gridWidth", [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
   ["height?", "gridHeight", [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]],
@@ -82,7 +83,7 @@ export default function menu(ctx, gameState) {
   } else {
     suppressX = false;
   }
-  if (gameState.players[0]?.buttons[0]) {
-    gameState.gameStarted = true;
+  if (gameState.players[0]?.buttons[0] && gameState.players[0]?.buttonsDirty[0]) {
+    gameState.gameMode = GameMode.Game;
   }
 }
