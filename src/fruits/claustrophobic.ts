@@ -25,11 +25,16 @@ export class ClaustrophobicFruit extends Fruit {
 	static spawn(gameState: GameState) {
 		let x: number;
 		let y: number;
+		let attempts = 0;
 		do {
 			x = Math.floor(1 + (Math.random() * (gameState.settings.gridWidth - 2)));
 			y = Math.floor(1 + (Math.random() * (gameState.settings.gridHeight - 2)));
+			attempts += 1;
+			if (attempts > 2) {
+				return;
+			}
 		// eslint-disable-next-line @typescript-eslint/no-loop-func
-		} while (gameState.players.some(player => player.snake.intersects([x, y])));
+		} while (gameState.players.some(player => player.snake.intersects([x, y])) || gameState.players.some(player => new ClaustrophobicFruit([x, y]).check(gameState, player.snake).disappear));
 
 		gameState.fruits.push(new ClaustrophobicFruit([x, y]));
 	}
