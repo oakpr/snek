@@ -11,8 +11,14 @@ export class BasicFruit extends Fruit {
 	}
 
 	static spawn(gameState: GameState) {
-		const x = Math.floor(Math.random() * gameState.settings.gridWidth);
-		const y = Math.floor(Math.random() * gameState.settings.gridHeight);
+		let x: number;
+		let y: number;
+		do {
+			x = Math.floor(1 + (Math.random() * (gameState.settings.gridWidth - 2)));
+			y = Math.floor(1 + (Math.random() * (gameState.settings.gridHeight - 2)));
+		// eslint-disable-next-line @typescript-eslint/no-loop-func
+		} while (gameState.players.some(player => player.snake.intersects([x, y])));
+
 		gameState.fruits.push(new BasicFruit([x, y]));
 	}
 
