@@ -3,8 +3,9 @@
 
 import type {GameState} from 'src';
 import {BasicFruit} from './fruits/basic.js';
+import {ClaustrophobicFruit} from './fruits/claustrophobic.js';
 
-export const fruitKinds = [BasicFruit];
+export const fruitKinds = [BasicFruit, ClaustrophobicFruit];
 
 export default function fruit(gameState: GameState, ctx: CanvasRenderingContext2D) {
 	for (let i = gameState.fruits.length - 1; i >= 0; i--) {
