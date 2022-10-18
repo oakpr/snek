@@ -1,5 +1,6 @@
 import {BasicFruit} from "./fruits/basic.js";
-export const fruitKinds = [BasicFruit];
+import {ClaustrophobicFruit} from "./fruits/claustrophobic.js";
+export const fruitKinds = [BasicFruit, ClaustrophobicFruit];
 export default function fruit(gameState, ctx) {
   for (let i = gameState.fruits.length - 1; i >= 0; i--) {
     const result = gameState.fruits[i].tick(gameState);

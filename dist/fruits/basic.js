@@ -6,8 +6,12 @@ export class BasicFruit extends Fruit {
     return counter < 2;
   }
   static spawn(gameState) {
-    const x = Math.floor(Math.random() * gameState.settings.gridWidth);
-    const y = Math.floor(Math.random() * gameState.settings.gridHeight);
+    let x;
+    let y;
+    do {
+      x = Math.floor(1 + Math.random() * (gameState.settings.gridWidth - 2));
+      y = Math.floor(1 + Math.random() * (gameState.settings.gridHeight - 2));
+    } while (gameState.players.some((player) => player.snake.intersects([x, y])));
     gameState.fruits.push(new BasicFruit([x, y]));
   }
   constructor(position) {
