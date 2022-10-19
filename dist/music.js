@@ -1,3 +1,4 @@
+import {GameMode} from "./game-mode.js";
 const actx = new AudioContext();
 const eventsToStartAudio = [
   "keydown",
@@ -14,7 +15,7 @@ const tracks = [
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
-      return state.gameStarted ? 1 : 0.5;
+      return state.gameMode === GameMode.Game ? 1 : 0.5;
     }
   },
   {
@@ -22,7 +23,7 @@ const tracks = [
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
-      return state.gameStarted ? 1 : 0;
+      return state.gameMode === GameMode.Game ? 1 : 0;
     }
   },
   {
@@ -38,7 +39,7 @@ const tracks = [
     node: void 0,
     gain: new GainNode(actx),
     cond(state) {
-      return state.gameStarted ? 1 : 0;
+      return state.gameMode === GameMode.Game ? 1 : 0;
     }
   }
 ];

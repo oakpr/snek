@@ -12,6 +12,11 @@ export default function hud(game_state, _delta, ctx) {
     ctx.textAlign = "left";
     ctx.fillText("demo", 10, 15);
   }
+  game_state.score = 0;
+  for (const snake of game_state.players.map((player) => player.snake)) {
+    game_state.score += snake.score;
+  }
+  game_state.score = Math.round(game_state.score);
   ctx.textAlign = "left";
   ctx.textBaseline = "bottom";
   ctx.font = "16px Major Mono Display";

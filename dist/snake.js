@@ -50,6 +50,7 @@ export class Snake {
     }
     this.combo -= delta / 3e3;
     this.combo = Math.max(this.combo, 0);
+    this.score *= 0.95 ** (delta / 1e3);
     this.thickness = (this.thickness * 2 + 0.8) / 3;
     const player = gameState.players.find((v) => v.controllerId === this.player);
     const x = player.movement[0];

@@ -1,3 +1,4 @@
+import {chooseCategory} from "./category.js";
 import {GameMode} from "./game-mode.js";
 export const defaultSettings = {
   flashy: true,
@@ -30,7 +31,12 @@ let suppressY = false;
 let suppressX = false;
 export default function menu(ctx, gameState) {
   ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-  ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 128);
+  ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 64);
+  ctx.font = "16px Major Mono Display";
+  ctx.strokeStyle = "white";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.strokeText(chooseCategory(gameState.settings), ctx.canvas.width / 2, ctx.canvas.height - 56, ctx.canvas.width - 128);
   const entryRange = Math.round((ctx.canvas.height - 128) / 128);
   const entrySpacing = 48;
   for (let i = -entryRange; i < entryRange + 1; i++) {
