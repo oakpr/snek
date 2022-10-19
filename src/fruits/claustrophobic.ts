@@ -83,8 +83,6 @@ export class ClaustrophobicFruit extends Fruit {
 
 			// If the position is a border, stop and exit.
 			if (p[0] === 0 || p[0] === gameState.settings.gridWidth - 1 || p[1] === 0 || p[1] === gameState.settings.gridHeight - 1) {
-				console.log(`Found position ${p.toString()}`);
-
 				return {
 					scoreDelta: 0,
 					lenDelta: 0,
