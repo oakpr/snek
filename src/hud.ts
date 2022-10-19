@@ -22,6 +22,13 @@ export default function hud(game_state: GameState, _delta: number, ctx: CanvasRe
 		ctx.fillText('demo', 10, 15);
 	}
 
+	game_state.score = 0;
+	for (const snake of game_state.players.map(player => player.snake)) {
+		game_state.score += snake.score;
+	}
+
+	game_state.score = Math.round(game_state.score);
+
 	// Draw a score display.
 	// TODO: This should be written to read from players' scores instead of the unused global score.
 	ctx.textAlign = 'left';
