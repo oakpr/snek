@@ -115,7 +115,7 @@ export class ClaustrophobicFruit extends Fruit {
 
 		// Default case, if we made it this far the fruit is surrounded.
 		return {
-			scoreDelta: 5,
+			scoreDelta: 20,
 			lenDelta: 0,
 			disappear: true,
 			snake,
