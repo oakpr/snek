@@ -18,9 +18,9 @@ import warning from './warning.js';
 export type GameState = {
 	// The number of milliseconds since the start of the game.
 	clock: number;
-	// Unused, should be removed.
-	// Players' scores are stored individually.
 	score: number;
+	// The highest score attained this game.
+	highScore: number;
 	// The list of players.
 	// A player is undefined after they have left.
 	players: Array<Player | undefined>;
@@ -42,6 +42,7 @@ const gameState: GameState = {
 	players: [],
 	clock: 0,
 	score: 0,
+	highScore: 0,
 	// Sets default settings as defined in menu.ts
 	settings: defaultSettings,
 	// The game starts on the warning screen.
@@ -109,6 +110,9 @@ function tick() {
 
 	// Draw HUD
 	hud(gameState, delta, ctx);
+
+	// Update high score
+	gameState.highScore = Math.max(gameState.highScore, gameState.score);
 
 	// Draw the grid test, if it's enabled.
 	if (gameState.settings.testDisplay) {
