@@ -13,6 +13,7 @@ const gameState = {
   players: [],
   clock: 0,
   score: 0,
+  highScore: 0,
   settings: defaultSettings,
   gameMode: GameMode.Warning,
   fruits: []
@@ -50,6 +51,7 @@ function tick() {
     }
   }
   hud(gameState, delta, ctx);
+  gameState.highScore = Math.max(gameState.highScore, gameState.score);
   if (gameState.settings.testDisplay) {
     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
     ctx.lineWidth = 2;
