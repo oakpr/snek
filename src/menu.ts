@@ -1,4 +1,5 @@
 import type {GameState} from 'src';
+import {chooseCategory} from './category.js';
 import {GameMode} from './game-mode.js';
 
 // The types of all settings values.
@@ -67,7 +68,14 @@ let suppressX = false;
 export default function menu(ctx: CanvasRenderingContext2D, gameState: GameState) {
 	// Draw the background.
 	ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-	ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 128);
+	ctx.fillRect(32, 64, ctx.canvas.width - 64, ctx.canvas.height - 64);
+
+	// Draw the game's category
+	ctx.font = '16px Major Mono Display';
+	ctx.strokeStyle = 'white';
+	ctx.textAlign = 'center';
+	ctx.textBaseline = 'middle';
+	ctx.strokeText(chooseCategory(gameState.settings), ctx.canvas.width / 2, ctx.canvas.height - 56, ctx.canvas.width - 128);
 
 	// Draw the entries.
 	const entryRange = Math.round((ctx.canvas.height - 128) / 128);
