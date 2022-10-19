@@ -87,6 +87,9 @@ export class Snake {
 		this.combo -= delta / 3000;
 		this.combo = Math.max(this.combo, 0);
 
+		// Score decay
+		this.score *= (0.95 ** (delta / 1000));
+
 		// Interpolate thickness
 		this.thickness = ((this.thickness * 2) + 0.8) / 3;
 
