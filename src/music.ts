@@ -1,4 +1,5 @@
 import type {GameState} from 'src';
+import {GameMode} from './game-mode.js';
 
 const actx = new AudioContext();
 
@@ -20,7 +21,7 @@ const tracks: Array<{location: string; node: AudioBufferSourceNode | undefined; 
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
-			return state.gameStarted ? 1 : 0.5;
+			return state.gameMode === GameMode.Game ? 1 : 0.5;
 		},
 	},
 	{
@@ -28,7 +29,7 @@ const tracks: Array<{location: string; node: AudioBufferSourceNode | undefined; 
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
-			return state.gameStarted ? 1 : 0;
+			return state.gameMode === GameMode.Game ? 1 : 0;
 		},
 	},
 	{
@@ -44,7 +45,7 @@ const tracks: Array<{location: string; node: AudioBufferSourceNode | undefined; 
 		node: undefined,
 		gain: new GainNode(actx),
 		cond(state: GameState) {
-			return state.gameStarted ? 1 : 0;
+			return state.gameMode === GameMode.Game ? 1 : 0;
 		},
 	},
 ];
