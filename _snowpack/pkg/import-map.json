@@ -1,5 +1,6 @@
 {
   "imports": {
-    "gl-matrix": "./gl-matrix.js"
+    "gl-matrix": "./gl-matrix.js",
+    "naughty-words/en.json": "./naughty-words/en.json"
   }
 }

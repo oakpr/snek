@@ -6,4 +6,5 @@ export var GameMode;
   GameMode2[GameMode2["Win"] = 3] = "Win";
   GameMode2[GameMode2["Lose"] = 4] = "Lose";
   GameMode2[GameMode2["UploadScore"] = 5] = "UploadScore";
+  GameMode2[GameMode2["CompareScore"] = 6] = "CompareScore";
 })(GameMode || (GameMode = {}));

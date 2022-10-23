@@ -8,16 +8,19 @@ import music from "./music.js";
 import snake from "./snake.js";
 import {GameMode} from "./game-mode.js";
 import warning from "./warning.js";
+import hiScore from "./hiscore.js";
 let lastTick = Date.now();
-const gameState = {
+export const defaultGameState = {
   players: [],
   clock: 0,
   score: 0,
   highScore: 0,
   settings: defaultSettings,
   gameMode: GameMode.Warning,
-  fruits: []
+  fruits: [],
+  name: void 0
 };
+const gameState = {...defaultGameState};
 const canvas = document.querySelector("#viewport");
 const ctx = canvas.getContext("2d");
 const frameTimeHistory = [];
@@ -45,6 +48,9 @@ function tick() {
         break;
       case GameMode.Warning:
         warning(ctx, gameState);
+        break;
+      case GameMode.UploadScore:
+        hiScore(gameState, ctx);
         break;
       default:
         alert("UNIMPLEMENTED GAMEMODE");
