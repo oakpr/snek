@@ -12,6 +12,7 @@ import type {Snake} from './snake.js';
 import snake from './snake.js';
 import {GameMode} from './game-mode.js';
 import warning from './warning.js';
+import hiScore from './hiscore.js';
 
 // The entire state of the game.
 // Game steps should not store their state internally; that is bad practice.
@@ -31,13 +32,15 @@ export type GameState = {
 	gameMode: GameMode;
 	// The list of all fruits
 	fruits: Fruit[];
+	// The string containing the player's name.
+	name: string | undefined;
 };
 
 // The time of the last tick.
 let lastTick = Date.now();
 
 // The default game state is initialized here.
-const gameState: GameState = {
+export const defaultGameState: GameState = {
 	// Players will be populated as the game receives input.
 	players: [],
 	clock: 0,
@@ -49,7 +52,10 @@ const gameState: GameState = {
 	gameMode: GameMode.Warning,
 	// The game starts with no fruits.
 	fruits: [],
+	name: undefined,
 };
+
+const gameState = {...defaultGameState};
 
 // A persistent reference to the game's canvas element.
 const canvas: HTMLCanvasElement = document.querySelector('#viewport');
@@ -101,6 +107,9 @@ function tick() {
 				break;
 			case GameMode.Warning:
 				warning(ctx, gameState);
+				break;
+			case GameMode.UploadScore:
+				hiScore(gameState, ctx);
 				break;
 			default:
 				// eslint-disable-next-line no-alert

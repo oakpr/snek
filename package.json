@@ -27,6 +27,7 @@
     "xo": "^0.52.3"
   },
   "dependencies": {
-    "gl-matrix": "^3.4.3"
+    "gl-matrix": "^3.4.3",
+    "naughty-words": "^1.2.0"
   }
 }

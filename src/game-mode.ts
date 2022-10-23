@@ -5,4 +5,5 @@ export enum GameMode {
 	Win,
 	Lose,
 	UploadScore,
+	CompareScore,
 }
