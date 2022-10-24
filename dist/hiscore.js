@@ -18,6 +18,9 @@ void fetch("./hiscore.json").then((response) => {
   });
 });
 export default function hiScore(gameState, ctx) {
+  if (!hiscore) {
+    gameState.gameMode = GameMode.Menu;
+  }
   const controls = gameState.players.find(Boolean);
   gameState.name = vcursors.map((v) => letters[v]).join("");
   draw(ctx, gameState);
