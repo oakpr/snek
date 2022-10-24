@@ -74,10 +74,7 @@ export default function hiScore(gameState: GameState, ctx: CanvasRenderingContex
 
 	// Restart the game if the player presses B
 	if (controls.buttons[1] && controls.buttonsDirty[1]) {
-		for (const key of Object.keys(gameState)) {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			gameState[key] = defaultGameState[key];
-		}
+		Object.assign(gameState, JSON.parse(JSON.stringify(defaultGameState)) as GameState);
 
 		gameState.gameMode = GameMode.Menu;
 	}
@@ -141,7 +138,10 @@ function vscroll(gameState: GameState, controls: Player) {
 
 function upload(gameState: GameState) {
 	if (!hiscore.secret) {
-		// Don't even try if we don't have a secret, since it definitely won't work.
+		// If we don't have a secret, save locally instead
+		const scores = JSON.parse(localStorage.getItem('scores') || '{}') as Record<string, number>;
+		scores[gameState.name] = Math.max(scores[gameState.name] || 0, gameState.highScore);
+		localStorage.setItem('scores', JSON.stringify(scores));
 		return;
 	}
 
@@ -156,3 +156,6 @@ function upload(gameState: GameState) {
 	void fetch(url, options);
 }
 
+export function hscoreCache(): HiScoreData | undefined {
+	return hiscore;
+}

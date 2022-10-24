@@ -13,6 +13,7 @@ import snake from './snake.js';
 import {GameMode} from './game-mode.js';
 import warning from './warning.js';
 import hiScore from './hiscore.js';
+import compareScores from './compare.js';
 
 // The entire state of the game.
 // Game steps should not store their state internally; that is bad practice.
@@ -55,7 +56,7 @@ export const defaultGameState: GameState = {
 	name: undefined,
 };
 
-const gameState = {...defaultGameState};
+const gameState = JSON.parse(JSON.stringify(defaultGameState)) as GameState;
 
 // A persistent reference to the game's canvas element.
 const canvas: HTMLCanvasElement = document.querySelector('#viewport');
@@ -100,6 +101,10 @@ function tick() {
 		snake(ctx, gameState, delta);
 		// Tick fruits
 		fruit(gameState, ctx);
+		// If testing mode is on, pressing B ends the game.
+		if (gameState.settings.testDisplay && gameState.players[0].buttons[1]) {
+			gameState.gameMode = GameMode.UploadScore;
+		}
 	} else {
 		switch (gameState.gameMode) {
 			case GameMode.Menu:
@@ -110,6 +115,9 @@ function tick() {
 				break;
 			case GameMode.UploadScore:
 				hiScore(gameState, ctx);
+				break;
+			case GameMode.CompareScore:
+				compareScores(gameState, ctx);
 				break;
 			default:
 				// eslint-disable-next-line no-alert
