@@ -40,6 +40,10 @@ void fetch('./hiscore.json').then(response => {
 });
 
 export default function hiScore(gameState: GameState, ctx: CanvasRenderingContext2D) {
+	if (!hiscore) {
+		gameState.gameMode = GameMode.Menu;
+	}
+
 	const controls: Player = gameState.players.find(Boolean);
 
 	// Fill the gameState's name field.
