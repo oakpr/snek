@@ -9,6 +9,7 @@ import snake from "./snake.js";
 import {GameMode} from "./game-mode.js";
 import warning from "./warning.js";
 import hiScore from "./hiscore.js";
+import compareScores from "./compare.js";
 let lastTick = Date.now();
 export const defaultGameState = {
   players: [],
@@ -20,7 +21,7 @@ export const defaultGameState = {
   fruits: [],
   name: void 0
 };
-const gameState = {...defaultGameState};
+const gameState = JSON.parse(JSON.stringify(defaultGameState));
 const canvas = document.querySelector("#viewport");
 const ctx = canvas.getContext("2d");
 const frameTimeHistory = [];
@@ -41,6 +42,9 @@ function tick() {
   if (gameState.gameMode === GameMode.Game) {
     snake(ctx, gameState, delta);
     fruit(gameState, ctx);
+    if (gameState.settings.testDisplay && gameState.players[0].buttons[1]) {
+      gameState.gameMode = GameMode.UploadScore;
+    }
   } else {
     switch (gameState.gameMode) {
       case GameMode.Menu:
@@ -51,6 +55,9 @@ function tick() {
         break;
       case GameMode.UploadScore:
         hiScore(gameState, ctx);
+        break;
+      case GameMode.CompareScore:
+        compareScores(gameState, ctx);
         break;
       default:
         alert("UNIMPLEMENTED GAMEMODE");

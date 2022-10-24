@@ -37,9 +37,7 @@ export default function hiScore(gameState, ctx) {
     upload(gameState);
   }
   if (controls.buttons[1] && controls.buttonsDirty[1]) {
-    for (const key of Object.keys(gameState)) {
-      gameState[key] = defaultGameState[key];
-    }
+    Object.assign(gameState, JSON.parse(JSON.stringify(defaultGameState)));
     gameState.gameMode = GameMode.Menu;
   }
   if (Math.abs(controls.movement[0]) > 0.7) {
@@ -92,6 +90,9 @@ function vscroll(gameState, controls) {
 }
 function upload(gameState) {
   if (!hiscore.secret) {
+    const scores = JSON.parse(localStorage.getItem("scores") || "{}");
+    scores[gameState.name] = Math.max(scores[gameState.name] || 0, gameState.highScore);
+    localStorage.setItem("scores", JSON.stringify(scores));
     return;
   }
   const url = hiscore.server + "/" + encodeURIComponent("snek " + chooseCategory(gameState.settings)) + "/" + gameState.name + "/" + gameState.highScore.toString();
@@ -102,4 +103,7 @@ function upload(gameState) {
     }
   };
   void fetch(url, options);
+}
+export function hscoreCache() {
+  return hiscore;
 }
