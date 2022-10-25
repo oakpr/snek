@@ -17,9 +17,13 @@ jobs:
         run: |
           npm ci
       - name: Snowpack build
+        env:
+          SOURCE_URL: ${{github.server_url}}/${{github.repository}}
         run: |
           npm run build
           touch build/.nojekyll
+          cp ./LICENSE ./build
+          sed -i "s/UPSTREAM/$(echo $SOURCE_URL | sed 's/\//\\\//g')/" build/index.html
       - name: Push git subdirectory as branch
         uses: s0/git-publish-subdir-action@v2.5.1
         env:
