@@ -29,7 +29,7 @@ const vcursors: number[] = Array.from({length: charLimit}).map(_ => 0);
 const badNames = new Set<string>(badWordsArray.filter(word => word.length === 3));
 
 // Fetch high score info.
-void fetch('./hiscore.json').then(response => {
+void fetch('/hiscore.json').then(response => {
 	console.log('Finished requesting high score server data');
 	console.log(response);
 	void response.text().then((string_: string) => {
