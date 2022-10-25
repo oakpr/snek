@@ -77,7 +77,7 @@ export class ClaustrophobicFruit extends Fruit {
       }
     }
     return {
-      scoreDelta: 20,
+      scoreDelta: 3,
       lenDelta: 0,
       disappear: true,
       snake: snake2
