@@ -7,7 +7,7 @@ let hiscore;
 const charLimit = 3;
 let hcursor = 0;
 const vcursors = Array.from({length: charLimit}).map((_) => 0);
-const badNames = new Set(badWordsArray.filter((word) => word.length === 3));
+const badNames = new Set(badWordsArray.filter((word) => word.length === charLimit));
 void fetch("./hiscore.json").then((response) => {
   console.log("Finished requesting high score server data");
   console.log(response);
