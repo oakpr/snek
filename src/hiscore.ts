@@ -26,7 +26,7 @@ const vcursors: number[] = Array.from({length: charLimit}).map(_ => 0);
 
 // List of names that aren't allowed...
 // Initialized once the list is fetched.
-const badNames = new Set<string>(badWordsArray.filter(word => word.length === 3));
+const badNames = new Set<string>(badWordsArray.filter(word => word.length === charLimit));
 
 // Fetch high score info.
 void fetch('./hiscore.json').then(response => {
